@@ -1,5 +1,4 @@
-import { html, Template, unsafeHtml } from '../src/html';
-import { renderToString } from '../src/render-to-string';
+import { html, Template, unsafeHtml, renderToString } from '../src/index';
 
 const nextTick = () => new Promise(resolve => setImmediate(resolve));
 
