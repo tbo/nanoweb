@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/tbo/nanoweb/issues"
   },
-  "homepage": "https://github.com/tbo/nanoweb#readme"
+  "homepage": "https://github.com/tbo/nanoweb#readme",
+  "dependencies": {
+    "node-cache": "^5.1.2"
+  }
 }

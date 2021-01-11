@@ -1,7 +1,5 @@
 import { html, Template, unsafeHtml, renderToString } from '../src/index';
 
-const nextTick = () => new Promise(resolve => setImmediate(resolve));
-
 const matchSnapshot = async (getComponent: () => Template | Promise<Template>) =>
   expect(await renderToString(getComponent())).toMatchSnapshot();
 
