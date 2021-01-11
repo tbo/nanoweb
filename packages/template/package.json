@@ -4,7 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
+  "files": [
+    "dist/**/*"
+  ],
   "directories": {
     "test": "tests"
   },

@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   testMatch: ['**/tests/**/*.ts'],
   testEnvironment: 'node',
   verbose: true,
