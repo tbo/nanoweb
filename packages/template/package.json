@@ -1,0 +1,23 @@
+{
+  "name": "@nanoweb/template",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "../../node_modules/.bin/jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tbo/nanoweb.git"
+  },
+  "author": "Thomas Bonk",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/tbo/nanoweb/issues"
+  },
+  "homepage": "https://github.com/tbo/nanoweb#readme"
+}

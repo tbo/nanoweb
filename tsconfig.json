@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
     "sourceMap": true,
     "declaration": true,
-    "moduleResolution": "node",
     "esModuleInterop": true,
-    "resolveJsonModule": true,
     "strict": true,
-  }
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+    "types": [],
+    "rootDirs": ["packages/template"]
+  },
+  "references": [{ "path": "packages/template/tsconfig.json" }],
+  "exclude": ["node_modules"]
 }

@@ -1,3 +1,13 @@
 {
-  "extends": "../../tsconfig.json"
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "types": ["node", "jest"],
+    "lib": ["ESNext"],
+    "skipLibCheck": true,
+    "outDir": "lib",
+    "checkJs": false,
+    "composite": true,
+    "esModuleInterop": true
+  }
 }
