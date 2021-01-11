@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Template tag Do not render \`false\` 1`] = `"false: "`;
+
+exports[`Template tag Do not render \`null\` 1`] = `"null: "`;
+
 exports[`Template tag Render async template tag  1`] = `"async test"`;
+
+exports[`Template tag Render cached static strings 1`] = `"This can be repeated, This can be repeated"`;
 
 exports[`Template tag Render embedded async number 1`] = `"async 42"`;
 
@@ -8,10 +14,14 @@ exports[`Template tag Render embedded async string 1`] = `"async test"`;
 
 exports[`Template tag Render embedded async template tag 1`] = `"another async template tag"`;
 
-exports[`Template tag Render embedded list 1`] = `"another Hello&lt;b&gt;World&lt;/b&gt;"`;
+exports[`Template tag Render embedded list 1`] = `"another Hello&lt;b&gt;World&lt;/b&gt;<b>!</b>"`;
 
 exports[`Template tag Render embedded template tag 1`] = `"another template tag"`;
 
 exports[`Template tag Render simple template tag 1`] = `"test"`;
 
 exports[`Template tag Render simple template tag with number substitution 1`] = `"test42"`;
+
+exports[`Template tag Render unsafe values 1`] = `"unsafe: <b>generated html</b>"`;
+
+exports[`Template tag Render unsafe values 2`] = `"unsafe: "`;

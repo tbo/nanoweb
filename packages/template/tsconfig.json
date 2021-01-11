@@ -4,7 +4,6 @@
     "target": "ESNext",
     "types": ["node", "jest"],
     "lib": ["ESNext"],
-    "skipLibCheck": true,
     "outDir": "lib",
     "checkJs": false,
     "composite": true,

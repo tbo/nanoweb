@@ -1,9 +1,10 @@
-import { render, html, Template } from '../src/html';
+import { html, Template, unsafeHtml } from '../src/html';
+import { renderToString } from '../src/render-to-string';
 
 const nextTick = () => new Promise(resolve => setImmediate(resolve));
 
 const matchSnapshot = async (getComponent: () => Template | Promise<Template>) =>
-  expect(await render(getComponent())).toMatchSnapshot();
+  expect(await renderToString(getComponent())).toMatchSnapshot();
 
 describe('Template tag', () => {
   test('Render simple template tag', async () => {
@@ -15,7 +16,7 @@ describe('Template tag', () => {
   });
 
   test('Render async template tag ', async () => {
-    await matchSnapshot(() => html`async test`);
+    await matchSnapshot(() => Promise.resolve(html`async test`));
   });
 
   test('Render embedded async string', async () => {
@@ -31,7 +32,25 @@ describe('Template tag', () => {
   });
 
   test('Render embedded list', async () => {
-    await matchSnapshot(() => html`another ${['Hello', '<b>World</b>']}`);
+    await matchSnapshot(() => html`another ${['Hello', '<b>World</b>', html`<b>!</b>`]}`);
+  });
+
+  test('Render unsafe values', async () => {
+    await matchSnapshot(() => html`unsafe: ${unsafeHtml('<b>generated html</b>')}`);
+    await matchSnapshot(() => html`unsafe: ${unsafeHtml(undefined)}`);
+  });
+
+  test('Do not render `null`', async () => {
+    await matchSnapshot(() => html`null: ${null}`);
+  });
+
+  test('Do not render `false`', async () => {
+    await matchSnapshot(() => html`false: ${false}`);
+  });
+
+  test('Render cached static strings', async () => {
+    const getValue = () => html`This can be repeated`;
+    await matchSnapshot(() => html`${getValue()}, ${getValue()}`);
   });
 
   test('Render embedded async template tag', async () => {

@@ -6,6 +6,7 @@
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "checkJs": false,
+    "skipLibCheck": true,
     "types": [],
     "rootDirs": ["packages/template"]
   },
