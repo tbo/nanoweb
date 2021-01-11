@@ -1,16 +1,9 @@
 {
   "compilerOptions": {
-    "moduleResolution": "Node",
     "sourceMap": true,
     "declaration": true,
     "esModuleInterop": true,
     "strict": true,
-    "allowSyntheticDefaultImports": true,
-    "checkJs": false,
-    "skipLibCheck": true,
-    "types": [],
-    "rootDirs": ["packages/template"]
   },
-  "references": [{ "path": "packages/template/tsconfig.json" }],
-  "exclude": ["node_modules"]
+  "references": [{ "path": "packages/template" }],
 }
