@@ -13,10 +13,10 @@ interface Options<T> extends Omit<NodeCache.Options, 'useClones'> {
 /**
  * Caches component responses in an optimized format
  */
-export default function cache<T extends (...args: any[]) => CacheResult>(
+export const cache = <T extends (...args: any[]) => CacheResult>(
   func: T,
   options: Options<T> = {},
-): (...funcArgs: Parameters<T>) => CacheResult {
+): ((...funcArgs: Parameters<T>) => CacheResult) => {
   const { cacheKey, ...nodeCacheOptions } = options;
   const componentCache = new NodeCache({ ...nodeCacheOptions, useClones: false });
   return (...args: Parameters<T>): CacheResult => {
@@ -35,4 +35,4 @@ export default function cache<T extends (...args: any[]) => CacheResult>(
       return result;
     }
   };
-}
+};
