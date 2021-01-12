@@ -1,0 +1,277 @@
+import morphdom from 'morphdom';
+const { performance } = window;
+
+const __BUILD_TIMESTAMP__ = 1;
+const __REVISION__ = '1';
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+const isLocalLink = (node: Node): boolean => {
+  let linkNode = node;
+  while (linkNode && linkNode.nodeName !== 'A') {
+    linkNode = linkNode.parentNode as Node;
+  }
+  return linkNode && ((linkNode as HTMLAnchorElement).getAttribute?.('href') ?? '').indexOf('://') === -1;
+};
+
+const isTextInput = (node: Node): node is HTMLInputElement =>
+  node.nodeName === 'INPUT' && ['email', 'text', 'password'].includes((node as HTMLInputElement).type);
+
+let cache: Cache;
+window.caches.open(`hybrid-${__BUILD_TIMESTAMP__}`).then(c => (cache = c));
+
+// Browsers don't evaluate newly added scripts. We are cloning the node
+// as a workaround.
+const replaceWithClone = (to: HTMLScriptElement, from = to) => {
+  const script = document.createElement('script');
+  Array.from(to.attributes).forEach(attribute => {
+    script.setAttribute(attribute.nodeName, attribute.nodeValue ?? '');
+  });
+  script.innerHTML = to.innerHTML;
+  from.replaceWith(script);
+};
+
+const shouldUpdate = (isCacheRequest: boolean) => (from: Node, to: Node) => {
+  if (
+    (from === document.activeElement &&
+      isTextInput(from) &&
+      isTextInput(to) &&
+      from.value !== from.getAttribute('value')) ||
+    (isCacheRequest && (from as any).getAttribute('data-lazy') !== null)
+  ) {
+    return false;
+  } else if (from.nodeName === 'SCRIPT' && to.nodeName === 'SCRIPT' && (to as HTMLScriptElement).innerText) {
+    replaceWithClone(to as HTMLScriptElement, from as HTMLScriptElement);
+    return false;
+  }
+  return !from.isEqualNode(to);
+};
+
+const shouldUpdateFromNetwork = shouldUpdate(false);
+const shouldUpdateFromCache = shouldUpdate(true);
+let abortController: AbortController | null = null;
+
+const parser = new DOMParser();
+
+const getFirstValidResponse = <T>(requests: Promise<T | void>[]): Promise<T> => {
+  return new Promise(resolve => requests.forEach(request => request.then(result => result && resolve(result))));
+};
+
+const transformDom = (mode: 'cache' | 'network') => (newDom: Document) => {
+  performance.mark('morph_dom');
+  morphdom(document.documentElement, newDom.documentElement.cloneNode(true), {
+    getNodeKey: node => (node as HTMLElement).id || (node as HTMLScriptElement).src,
+    onBeforeElUpdated: mode === 'network' ? shouldUpdateFromNetwork : shouldUpdateFromCache,
+    onNodeAdded: node => {
+      if (node.nodeName === 'SCRIPT') {
+        replaceWithClone(node as HTMLScriptElement);
+      }
+      return node;
+    },
+  });
+  performance.measure('morphing', 'morph_dom');
+};
+
+const restoreScrollPosition = () => {
+  const position = window.history.state?.scrollPosition;
+  if (position) {
+    window.scrollTo(...position);
+  } else {
+    window.scrollTo(0, 0);
+  }
+};
+
+type CacheEntry = { dom: Document; validUntil: number; url: string } | undefined;
+
+const cacheMap: Record<string, CacheEntry> = {};
+
+const parseResponse = async (response: Response) => {
+  performance.mark('parse_response_start');
+  const validUntil = new Date(response.headers.get('Date') || 0).getTime() + 1800000;
+  const dom = parser.parseFromString(await response.clone().text(), 'text/html');
+  performance.measure('Parse response', 'parse_response_start');
+  return { dom, validUntil, url: response.url };
+};
+
+const cacheResponse = (request: Request, response: Response, parsedResponse: CacheEntry) => {
+  performance.mark('cache_response_start');
+  if (response.status < 400) {
+    cache.put(response.url, response);
+    cacheMap[response.url] = parsedResponse;
+    if (response.status === 301) {
+      cache.put(request.url, response);
+      cacheMap[request.url] = parsedResponse;
+    }
+  }
+  performance.measure('Cache response', 'cache_response_start');
+};
+
+const getResponseFromCache = (request: Request): CacheEntry | Promise<CacheEntry> =>
+  cacheMap[request.url] ||
+  cache
+    ?.match(request)
+    .then(response => response && parseResponse(response))
+    .catch(() => undefined);
+
+const handleNetworkResponse = async (request: Request, cacheRace: AbortController): Promise<string | undefined> => {
+  // We stop loading new images to improve the loading speed for the upcoming request
+  document.querySelectorAll('img').forEach((image: HTMLImageElement) => {
+    if (!image.complete) {
+      image.style.visibility = 'hidden';
+      image.setAttribute('src', '');
+    }
+  });
+  performance.mark('fetch_request');
+  const response = await fetch(request, { importance: 'high' } as any);
+  performance.measure('Get initial network response', 'fetch_request');
+  performance.mark('handle_network_response_start');
+  const { headers } = response;
+  if (
+    headers.get('content-type')?.indexOf('text/html') === -1 ||
+    (headers.get('x-revision') && headers.get('x-revision') !== __REVISION__)
+  ) {
+    abortController?.abort();
+    window.location.href = response.url;
+    return undefined;
+  }
+
+  const parsed = await parseResponse(response);
+  transformDom('network')(parsed.dom);
+  // Aborting requests of cached responses will lead to uncaught exceptions
+  abortController = null;
+  cacheResponse(request, response, parsed);
+  cacheRace.abort();
+  window.document.dispatchEvent(
+    new Event('new-content', {
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+  performance.measure('Handle network response', 'handle_network_response_start');
+  return response.url;
+};
+
+const updateFromCache = async (request: Request, cacheRace: AbortController) => {
+  performance.mark('update_from_cache_start');
+  const parsed = await getResponseFromCache(request);
+  if (!parsed || cacheRace.signal.aborted || parsed.validUntil < Date.now()) {
+    return;
+  }
+  transformDom('cache')(parsed.dom);
+  performance.measure('Update from cache', 'update_from_cache_start');
+  return parsed.url;
+};
+
+const handleTransition = async (targetUrl: string, body?: BodyInit) => {
+  performance.mark('transition_start');
+  abortController?.abort();
+  abortController = new AbortController();
+  const cacheRace = new AbortController();
+  document.body.classList.add('is-loading');
+  const request = new Request(targetUrl, {
+    method: body ? 'POST' : 'GET',
+    credentials: 'same-origin',
+    redirect: 'follow',
+    signal: abortController.signal,
+    body,
+  });
+  performance.mark('trigger_requests');
+  const cachedTransition = updateFromCache(request, cacheRace);
+  const networkTransition = handleNetworkResponse(request, cacheRace).catch(error => {
+    if (error.name !== 'AbortError') {
+      console.error(error, `Unable to resolve "${targetUrl}". Doing hard load instead...`);
+      window.location.href = targetUrl;
+    }
+  });
+  const result = await getFirstValidResponse([cachedTransition, networkTransition]);
+  performance.measure('Transition', 'transition_start');
+  return result;
+};
+
+const saveScrollPosition = () =>
+  window.history.replaceState({ scrollPosition: [window.scrollX, window.scrollY] }, document.title);
+
+export const navigateTo = async (targetUrl: string, body?: BodyInit, target?: string | null, replace?: boolean) => {
+  if (!targetUrl) {
+    return;
+  } else if (target === '_parent' && window.parent !== window) {
+    window.top.postMessage({ type: 'NAVIGATE', targetUrl }, window.location.origin);
+    return;
+  }
+  saveScrollPosition();
+  // The final and target URLs can differ due to HTTP redirects.
+  const finalUrl = await handleTransition(targetUrl, body);
+  if (finalUrl) {
+    if (finalUrl !== window.location.href) {
+      window.history[replace ? 'replaceState' : 'pushState'](null, document.title, finalUrl);
+      window.document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: true, cancelable: true }));
+    }
+    restoreScrollPosition();
+  }
+};
+
+const handleClick = (event: MouseEvent) => {
+  const element = (event!.target! as HTMLElement).closest('a');
+  if (element && isLocalLink(element)) {
+    event.preventDefault();
+    navigateTo(
+      element.getAttribute('href') ?? '',
+      undefined,
+      element.getAttribute?.('target'),
+      element.dataset.replace !== undefined,
+    );
+  }
+};
+
+const handleSubmit = (event: Event) => {
+  event.preventDefault();
+  const form = event.target as HTMLFormElement;
+  const data = new FormData(form);
+  const target = form.getAttribute('target');
+  const { activeElement } = document;
+  // The submitter event property is not yet available in all browsers so we have to rely
+  // on `activeElement`
+  if (
+    activeElement &&
+    form.contains(activeElement) &&
+    (activeElement.tagName === 'BUTTON' ||
+      (activeElement.tagName === 'INPUT' && activeElement.getAttribute('type')?.toLowerCase() === 'submit')) &&
+    activeElement.getAttribute('name') &&
+    activeElement.getAttribute('value')
+  ) {
+    data.append(activeElement.getAttribute('name')!, activeElement.getAttribute('value')!);
+  }
+  if (form.method === 'post') {
+    navigateTo(form.action, data, target);
+  } else {
+    const query = new URLSearchParams(data as any).toString();
+    navigateTo(form.action + (query ? '?' + query : ''), undefined, target);
+  }
+};
+
+let scrollSaveTimer: NodeJS.Timeout;
+const handleScroll = () => {
+  clearTimeout(scrollSaveTimer);
+  scrollSaveTimer = setTimeout(saveScrollPosition, 100);
+};
+
+const handleMessage = (event: MessageEvent) => {
+  if ((event.origin === window.location.origin, event.data?.type === 'NAVIGATE')) {
+    navigateTo(event.data?.targetUrl, event.data?.body);
+  }
+};
+
+document.addEventListener('click', handleClick);
+document.addEventListener('submit', handleSubmit);
+window.addEventListener('message', handleMessage);
+window.onpopstate = async (event: PopStateEvent) => {
+  await handleTransition((event?.target as Window).location.href);
+  restoreScrollPosition();
+};
+// We need to save the scroll position constantly, because we can't access the previous history entry
+// after popstate: https://github.com/whatwg/html/issues/1042
+window.addEventListener('scroll', handleScroll, { passive: true });
+
+restoreScrollPosition();

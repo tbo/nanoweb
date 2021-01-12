@@ -1,0 +1,36 @@
+{
+  "name": "@nanoweb/links",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/links.js",
+  "source": "src/links.ts",
+  "types": "dist/links.d.ts",
+  "unpkg": "dist/links.standalone.min.js",
+  "jsdelivr": "dist/links.standalone.min.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tbo/nanoweb.git"
+  },
+  "author": "Thomas Bonk",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/tbo/nanoweb/issues"
+  },
+  "homepage": "https://github.com/tbo/nanoweb#readme",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "@rollup/plugin-typescript": "^8.1.0",
+    "instant.page": "^5.1.0",
+    "morphdom": "^2.6.1",
+    "parcel-bundler": "^1.12.4",
+    "rollup": "^2.36.1",
+    "rollup-plugin-terser": "^7.0.2"
+  }
+}
