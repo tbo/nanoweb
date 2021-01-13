@@ -9,8 +9,9 @@ export default [
       dir: 'dist',
       format: 'cjs',
       sourcemap: true,
+      exports: 'named',
     },
-    plugins: [typescript()],
+    plugins: [typescript({ include: './src/**/*.ts' })],
     external: ['morphdom'],
   },
   {
@@ -19,7 +20,7 @@ export default [
       file: 'dist/links.esm.js',
       format: 'esm',
     },
-    plugins: [typescript({ sourceMap: false })],
+    plugins: [typescript({ include: './src/**/*.ts', sourceMap: false })],
     external: ['morphdom'],
   },
   {
@@ -30,7 +31,7 @@ export default [
       sourcemap: false,
     },
     plugins: [
-      typescript({ declaration: false, sourceMap: false, target: 'es5' }),
+      typescript({ include: './src/**/*.ts', declaration: false, sourceMap: false, target: 'es5' }),
       terser({ output: { comments: false } }),
       nodeResolve(),
     ],
