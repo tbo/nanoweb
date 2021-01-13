@@ -1,5 +1,4 @@
-import cache from '../src/cache';
-import { html, Template, renderToString, RenderOptions } from '../src/index';
+import { html, Template, renderToString, RenderOptions, cache } from '../src/index';
 
 const nextTick = () => new Promise(resolve => setImmediate(resolve));
 

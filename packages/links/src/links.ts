@@ -1,12 +1,8 @@
 import morphdom from 'morphdom';
 const { performance } = window;
 
-const __BUILD_TIMESTAMP__ = 1;
-const __REVISION__ = '1';
-
-if ('scrollRestoration' in history) {
-  history.scrollRestoration = 'manual';
-}
+let revision: string;
+let cache: Cache | undefined;
 
 const isLocalLink = (node: Node): boolean => {
   let linkNode = node;
@@ -18,9 +14,6 @@ const isLocalLink = (node: Node): boolean => {
 
 const isTextInput = (node: Node): node is HTMLInputElement =>
   node.nodeName === 'INPUT' && ['email', 'text', 'password'].includes((node as HTMLInputElement).type);
-
-let cache: Cache;
-window.caches.open(`hybrid-${__BUILD_TIMESTAMP__}`).then(c => (cache = c));
 
 // Browsers don't evaluate newly added scripts. We are cloning the node
 // as a workaround.
@@ -98,10 +91,10 @@ const parseResponse = async (response: Response) => {
 const cacheResponse = (request: Request, response: Response, parsedResponse: CacheEntry) => {
   performance.mark('cache_response_start');
   if (response.status < 400) {
-    cache.put(response.url, response);
+    cache?.put(response.url, response);
     cacheMap[response.url] = parsedResponse;
     if (response.status === 301) {
-      cache.put(request.url, response);
+      cache?.put(request.url, response);
       cacheMap[request.url] = parsedResponse;
     }
   }
@@ -130,7 +123,7 @@ const handleNetworkResponse = async (request: Request, cacheRace: AbortControlle
   const { headers } = response;
   if (
     headers.get('content-type')?.indexOf('text/html') === -1 ||
-    (headers.get('x-revision') && headers.get('x-revision') !== __REVISION__)
+    (headers.get('x-revision') && headers.get('x-revision') !== revision)
   ) {
     abortController?.abort();
     window.location.href = response.url;
@@ -181,7 +174,7 @@ const handleTransition = async (targetUrl: string, body?: BodyInit) => {
   const cachedTransition = updateFromCache(request, cacheRace);
   const networkTransition = handleNetworkResponse(request, cacheRace).catch(error => {
     if (error.name !== 'AbortError') {
-      console.error(error, `Unable to resolve "${targetUrl}". Doing hard load instead...`);
+      console.error(error, `Unable to resolve "${targetUrl}". Doing hard load instead...`); // eslint-disable-line
       window.location.href = targetUrl;
     }
   });
@@ -263,15 +256,28 @@ const handleMessage = (event: MessageEvent) => {
   }
 };
 
-document.addEventListener('click', handleClick);
-document.addEventListener('submit', handleSubmit);
-window.addEventListener('message', handleMessage);
-window.onpopstate = async (event: PopStateEvent) => {
-  await handleTransition((event?.target as Window).location.href);
+interface Options {
+  revision?: string;
+}
+
+export default async (options?: Options) => {
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+
+  revision = options?.revision ?? 'static';
+  await window.caches?.open(`hybrid-${revision}`).then(c => (cache = c));
+
+  document.addEventListener('click', handleClick);
+  document.addEventListener('submit', handleSubmit);
+  window.addEventListener('message', handleMessage);
+  window.onpopstate = async (event: PopStateEvent) => {
+    await handleTransition((event?.target as Window).location.href);
+    restoreScrollPosition();
+  };
+  // We need to save the scroll position constantly, because we can't access the previous history entry
+  // after popstate: https://github.com/whatwg/html/issues/1042
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
   restoreScrollPosition();
 };
-// We need to save the scroll position constantly, because we can't access the previous history entry
-// after popstate: https://github.com/whatwg/html/issues/1042
-window.addEventListener('scroll', handleScroll, { passive: true });
-
-restoreScrollPosition();

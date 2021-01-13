@@ -1,2 +1,4 @@
 import 'instant.page';
-import './links';
+import links from './links';
+
+links();
