@@ -1,7 +1,6 @@
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import serve from 'rollup-plugin-serve';
 
 export default [
   {
@@ -35,7 +34,6 @@ export default [
       typescript({ include: './src/**/*.ts', declaration: false, sourceMap: true, target: 'es5' }),
       terser({ output: { comments: false } }),
       nodeResolve(),
-      serve('dist'),
     ],
   },
 ];
