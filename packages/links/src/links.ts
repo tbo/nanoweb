@@ -52,9 +52,35 @@ const getFirstValidResponse = <T>(requests: Promise<T | void>[]): Promise<T> => 
   return new Promise(resolve => requests.forEach(request => request.then(result => result && resolve(result))));
 };
 
+const IMMUTABLE_TAGS = ['STYLE', 'SCRIPT', 'LINK'];
+
+const morphHead = (from: HTMLHeadElement, to: HTMLHeadElement) => {
+  Array.from(from.children)
+    .filter(element => !IMMUTABLE_TAGS.includes(element.nodeName))
+    .forEach(element => from.removeChild(element));
+  Array.from(to.children)
+    .filter(
+      element =>
+        !IMMUTABLE_TAGS.includes(element.nodeName) ||
+        !Array.from(from.children).find(fromElement => fromElement.isEqualNode(element)),
+    )
+    .forEach(element => from.appendChild(element));
+};
+
+const removeUnusedHeaderElements = (from: HTMLHeadElement, to: HTMLHeadElement) => {
+  Array.from(from.children)
+    .filter(
+      element =>
+        IMMUTABLE_TAGS.includes(element.nodeName) &&
+        !Array.from(to.children).find(toElement => toElement.isEqualNode(element)),
+    )
+    .forEach(element => from.removeChild(element));
+};
+
 const transformDom = (mode: 'cache' | 'network') => (newDom: Document) => {
   performance.mark('morph_dom');
-  morphdom(document.documentElement, newDom.documentElement.cloneNode(true), {
+  morphHead(document.head, newDom.head.cloneNode(true) as HTMLHeadElement);
+  morphdom(document.body, newDom.body.cloneNode(true), {
     getNodeKey: node => (node as HTMLElement).id || (node as HTMLScriptElement).src,
     onBeforeElUpdated: mode === 'network' ? shouldUpdateFromNetwork : shouldUpdateFromCache,
     onNodeAdded: node => {
@@ -64,6 +90,9 @@ const transformDom = (mode: 'cache' | 'network') => (newDom: Document) => {
       return node;
     },
   });
+  if (mode === 'network') {
+    removeUnusedHeaderElements(document.head, newDom.head);
+  }
   performance.measure('morphing', 'morph_dom');
 };
 
@@ -101,12 +130,16 @@ const cacheResponse = (request: Request, response: Response, parsedResponse: Cac
   performance.measure('Cache response', 'cache_response_start');
 };
 
-const getResponseFromCache = (request: Request): CacheEntry | Promise<CacheEntry> =>
-  cacheMap[request.url] ||
-  cache
+const getResponseFromCache = (request: Request): CacheEntry | Promise<CacheEntry> => {
+  const hit = cacheMap[request.url];
+  if (hit) {
+    return { ...hit, dom: hit.dom.cloneNode(true) as Document };
+  }
+  return cache
     ?.match(request)
     .then(response => response && parseResponse(response))
     .catch(() => undefined);
+};
 
 const handleNetworkResponse = async (request: Request, cacheRace: AbortController): Promise<string | undefined> => {
   // We stop loading new images to improve the loading speed for the upcoming request
@@ -123,7 +156,7 @@ const handleNetworkResponse = async (request: Request, cacheRace: AbortControlle
   const { headers } = response;
   if (
     headers.get('content-type')?.indexOf('text/html') === -1 ||
-    (headers.get('x-revision') && headers.get('x-revision') !== revision)
+    (headers.get('x-revision') && revision && headers.get('x-revision') !== revision)
   ) {
     abortController?.abort();
     window.location.href = response.url;
@@ -256,6 +289,15 @@ const handleMessage = (event: MessageEvent) => {
   }
 };
 
+const cacheInitialPageLoad = () => {
+  const url = window.location.href;
+  cacheMap[url] = {
+    dom: document.cloneNode(true) as Document,
+    validUntil: new Date().getTime() + 1800000,
+    url,
+  };
+};
+
 interface Options {
   revision?: string;
 }
@@ -265,8 +307,11 @@ export default async (options?: Options) => {
     history.scrollRestoration = 'manual';
   }
 
-  revision = options?.revision ?? 'static';
-  await window.caches?.open(`hybrid-${revision}`).then(c => (cache = c));
+  if (options?.revision) {
+    revision = options?.revision;
+    await window.caches?.open(`hybrid-${revision}`).then(c => (cache = c));
+  }
+  cacheInitialPageLoad();
 
   document.addEventListener('click', handleClick);
   document.addEventListener('submit', handleSubmit);

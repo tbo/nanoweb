@@ -1,6 +1,7 @@
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import serve from 'rollup-plugin-serve';
 
 export default [
   {
@@ -28,12 +29,13 @@ export default [
     output: {
       file: 'dist/links.standalone.min.js',
       format: 'iife',
-      sourcemap: false,
+      sourcemap: true,
     },
     plugins: [
-      typescript({ include: './src/**/*.ts', declaration: false, sourceMap: false, target: 'es5' }),
+      typescript({ include: './src/**/*.ts', declaration: false, sourceMap: true, target: 'es5' }),
       terser({ output: { comments: false } }),
       nodeResolve(),
+      serve('dist'),
     ],
   },
 ];

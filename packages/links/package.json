@@ -1,6 +1,6 @@
 {
   "name": "@nanoweb/links",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "dist/links.js",
   "source": "src/links.ts",
@@ -30,6 +30,7 @@
     "instant.page": "^5.1.0",
     "parcel-bundler": "^1.12.4",
     "rollup": "^2.36.1",
+    "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
