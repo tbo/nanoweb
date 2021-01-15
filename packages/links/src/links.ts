@@ -4,6 +4,12 @@ const { performance } = window;
 let revision: string;
 let cache: Cache | undefined;
 
+const loadingAnimation = document.createElement('style');
+loadingAnimation.innerHTML = `
+  body { transition: opacity 150ms ease-in 16ms; }
+  body.is-loading { opacity: 0.75; }
+`;
+
 const isLocalLink = (node: Node): boolean => {
   let linkNode = node;
   while (linkNode && linkNode.nodeName !== 'A') {
@@ -72,6 +78,7 @@ const removeUnusedHeaderElements = (from: HTMLHeadElement, to: HTMLHeadElement) 
     .filter(
       element =>
         IMMUTABLE_TAGS.includes(element.nodeName) &&
+        element !== loadingAnimation &&
         !Array.from(to.children).find(toElement => toElement.isEqualNode(element)),
     )
     .forEach(element => from.removeChild(element));
@@ -300,6 +307,7 @@ const cacheInitialPageLoad = () => {
 
 interface Options {
   revision?: string;
+  defaultLoadingAnimation?: boolean;
 }
 
 export default async (options?: Options) => {
@@ -325,4 +333,8 @@ export default async (options?: Options) => {
   window.addEventListener('scroll', handleScroll, { passive: true });
 
   restoreScrollPosition();
+
+  if (options?.defaultLoadingAnimation) {
+    document.head.appendChild(loadingAnimation);
+  }
 };
