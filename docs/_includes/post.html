@@ -1,0 +1,34 @@
+---
+layout: default
+---
+{% include topnav.html %}
+
+<main class="wrapper">
+  <nav class="side-nav">
+    <button id="toggleNavButton">Menu</button>
+    <div class="title">Template</div>
+    <ul>
+      {% for guide in collections.guide %}
+        <li class="{% if page.url == guide.url %}active{% endif %}">
+          <a href="{{site.baseurl}}{{ guide.url }}">{{guide.data.title}}</a>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="title">Links</div>
+  </nav>
+
+  <article>
+    <h1>{{ title }}</h1>
+
+    {{ content | toc }}
+
+    {{ content }}
+  </article>
+</main>
+
+<script>
+  toggleNavButton.addEventListener('click', function(event) {
+    const nav = event.target.parentElement;
+    nav.classList.toggle('open');
+  });
+</script>
