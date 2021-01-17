@@ -14,30 +14,32 @@ loadLanguages(['js-templates']);
 const slugify = s => slugifyLib(s, { lower: true });
 
 module.exports = function (eleventyConfig) {
+  const addCollection = name => {
+    eleventyConfig.addCollection(name, function (collection) {
+      // Order the 'guide' collection by filename, which includes a number prefix.
+      // We could also order by a frontmatter property
+      return collection.getFilteredByGlob(`./docs/${name}/*`).sort(function (a, b) {
+        if (a.fileSlug == 'template') {
+          return -1;
+        }
+        if (a.fileSlug < b.fileSlug) {
+          return -1;
+        }
+        if (b.fileSlug < a.fileSlug) {
+          return 1;
+        }
+        return 0;
+      });
+    });
+  };
   eleventyConfig.addPassthroughCopy('./docs/css/');
   eleventyConfig.addPassthroughCopy('./docs/images/');
   eleventyConfig.addPlugin(pluginTOC, { tags: ['h2', 'h3'] });
   eleventyConfig.addPlugin(syntaxHighlight);
-  const md = markdownIt({ html: true, breaks: true, linkify: true })
-    .use(markdownItAttrs)
-    .use(markdownItAnchor, { slugify, permalink: false });
+  addCollection('template');
+  addCollection('links');
+  const md = markdownIt({ html: true, breaks: true, linkify: true }).use(markdownItAttrs).use(markdownItAnchor);
   eleventyConfig.setLibrary('md', md);
-  eleventyConfig.addCollection('guide', function (collection) {
-    // Order the 'guide' collection by filename, which includes a number prefix.
-    // We could also order by a frontmatter property
-    return collection.getFilteredByGlob('./docs/guide/*').sort(function (a, b) {
-      if (a.fileSlug == 'guide') {
-        return -1;
-      }
-      if (a.fileSlug < b.fileSlug) {
-        return -1;
-      }
-      if (b.fileSlug < a.fileSlug) {
-        return 1;
-      }
-      return 0;
-    });
-  });
 
   return {
     dir: { input: './docs', output: '_site' },

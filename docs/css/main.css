@@ -760,3 +760,16 @@ td {
     transform: translate3d(0, 0, 0);
   }
 }
+
+.header-anchor {
+  display: none;
+}
+
+h1:hover a.header-anchor,
+h2:hover a.header-anchor,
+h3:hover a.header-anchor,
+h4:hover a.header-anchor,
+h5:hover a.header-anchor,
+h6:hover a.header-anchor {
+  display: inline;
+}

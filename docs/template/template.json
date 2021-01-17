@@ -1,0 +1,4 @@
+{
+  "layout": "post",
+  "permalink": "/template/{{slug}}/index.html"
+}

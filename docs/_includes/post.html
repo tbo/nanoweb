@@ -8,9 +8,9 @@ layout: default
     <button id="toggleNavButton">Menu</button>
     <div class="title">Template</div>
     <ul>
-      {% for guide in collections.guide %}
-        <li class="{% if page.url == guide.url %}active{% endif %}">
-          <a href="{{site.baseurl}}{{ guide.url }}">{{guide.data.title}}</a>
+      {% for item in collections.template%}
+        <li class="{% if page.url == item.url %}active{% endif %}">
+          <a href="{{site.baseurl}}{{ item.url }}">{{item.data.title}}</a>
         </li>
       {% endfor %}
     </ul>

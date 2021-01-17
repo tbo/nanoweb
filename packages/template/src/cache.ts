@@ -6,7 +6,7 @@ type CacheKeyFunction<TFn> = TFn extends (...a: infer A) => any ? (...a: A) => f
 
 type CacheResult = Template | Promise<Template>;
 
-interface Options<T> extends Omit<NodeCache.Options, 'useClones'> {
+interface Options<T> extends NodeCache.Options {
   cacheKey?: CacheKeyFunction<T>;
 }
 
@@ -18,7 +18,7 @@ export const cache = <T extends (...args: any[]) => CacheResult>(
   options: Options<T> = {},
 ): ((...funcArgs: Parameters<T>) => CacheResult) => {
   const { cacheKey, ...nodeCacheOptions } = options;
-  const componentCache = new NodeCache({ ...nodeCacheOptions, useClones: false });
+  const componentCache = new NodeCache({ useClones: false, ...nodeCacheOptions });
   return (...args: Parameters<T>): CacheResult => {
     const key = cacheKey?.(...args) || 'static';
     if (componentCache.has(key)) {
