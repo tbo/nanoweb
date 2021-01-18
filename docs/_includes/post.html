@@ -6,6 +6,15 @@ layout: default
 <main class="wrapper">
   <nav class="side-nav">
     <button id="toggleNavButton">Menu</button>
+
+    <ul>
+      <li class="{% if page.url == '/' %}active{% endif %}">
+        <a href="/">Introduction</a>
+      </li>
+      <li class="{% if page.url == '/getting-started.html' %}active{% endif %}">
+        <a href="{{site.baseurl}}/getting-started.html">Getting Started</a>
+      </li>
+    </ul>
     <div class="title">Template</div>
     <ul>
       {% for item in collections.template%}

@@ -20,7 +20,7 @@ const myTemplate = html`<div>Hello World</div>`;
 
 // Render the template
 renderToString(myTemplate)
-  .then(text => console.log(text)); // Use the result
+  .then(text => console.log(text)); // => "<div>Hello World</div>"
 ```
 
 The template is a [_tagged template literal_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals). The template itself looks like a regular JavaScript string, but enclosed in backticks (`` ` ``) instead of quotes. The browser passes the string to `@nanoweb/template`'s `html` tag function.
