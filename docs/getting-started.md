@@ -40,6 +40,4 @@ renderToString(myTemplate('World'))
 
 ```
 
-To learn more about templates, see [Writing Templates](./writing-templates).
-
-[lit-html package]: https://www.npmjs.com/package/lit-html
+To learn more about templates, see [Writing Templates](./template/writing-templates).
