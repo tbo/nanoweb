@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "docs": "eleventy --config=./docs/.eleventy.js"
+    "docs": "eleventy --config=./docs/.eleventy.js",
+    "benchmark": "cd benchmarks && npm start"
   },
   "directories": {
     "doc": "docs"
@@ -40,5 +41,8 @@
     "slugify": "^1.4.6",
     "ts-jest": "^26.4.4",
     "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "@nanoweb/template": "0.0.2"
   }
 }
