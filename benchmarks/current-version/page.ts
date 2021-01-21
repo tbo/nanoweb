@@ -1,13 +1,14 @@
 import classNames from 'classnames';
 import { stringify } from 'querystring';
-import { html } from '../../wasm-html/pkg';
+import getProducts from '../get-products';
+import { html, renderToString } from '../../packages/template/src';
 
 const getRange = (to: number) => [...Array(to).keys()];
 
 const getQuery = (params: Record<string, string | number>) =>
   stringify(Object.fromEntries(Object.entries(params).filter(([, value]) => value)));
 
-const Base = (contents: any) => (html as any)`
+const Base = (contents: any) => html`
   <html lang="en">
     <head>
       <meta charset="utf-8" />
@@ -45,7 +46,7 @@ const Base = (contents: any) => (html as any)`
   </html>
 `;
 
-const getProductTile = ({ id, name, price, description, image }: any) => (html as any)`
+const getProductTile = ({ id, name, price, description, image }: any) => html`
   <div id="${id}" className="card blue-grey darken-1 hit">
     <div className="card-content white-text">
       <span className="card-title">${name}</span>
@@ -61,7 +62,7 @@ const getProductTile = ({ id, name, price, description, image }: any) => (html a
   </div>
 `;
 
-const getPaginationEntry = (activePage: number, query: string) => (page: number) => (html as any)`
+const getPaginationEntry = (activePage: number, query: string) => (page: number) => html`
   <li className="${classNames('waves-effect', { active: activePage === page })}>
     <a href="?${getQuery({ query, page })}">${page + 1}</a>
   </li>
@@ -71,17 +72,18 @@ const getPagination = (total: number, activePage: number, query: string) => {
   if (!total) {
     return '';
   }
-  return (html as any)`
+  return html`
     <ul className="pagination">
       ${getRange(total).map(getPaginationEntry(activePage, query))}
     </ul>
   `;
 };
 
-const Page = (products: any) => {
+const Page = async () => {
+  const products = await getProducts();
   const query = 'table';
   const { nbHits, nbPages, hits, page: activePage } = products;
-  return Base((html as any)`
+  return Base(html`
       <p>
         <div className="chip">Hits: ${nbHits}</div>
       </p>

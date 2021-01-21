@@ -7,5 +7,6 @@
     "composite": true,
     "jsx": "react",
     "jsxFactory": "createElement",
-  }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "../packages/template/src/**/*.ts"]
 }

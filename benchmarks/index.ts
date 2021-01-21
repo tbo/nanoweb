@@ -5,14 +5,14 @@ import reactBenchmark from './react';
 import simpleTemplateTagBenchmark from './simple-template-tag';
 import advancedTemplateTagBenchmark from './advanced-template-tag';
 import streamingTemplateTagBenchmark from './streaming-template-tag';
-// import simpleWasm from './simple-wasm';
+import currentVersionBenchmark from './current-version';
 
 const SAMPLES = 1000;
 
 const toString = async (stream: Readable) => {
   let buffer = '';
   stream.on('data', (data: string) => (buffer += data.toString()));
-  return new Promise((resolve) => stream.on('end', () => resolve(buffer)));
+  return new Promise(resolve => stream.on('end', () => resolve(buffer)));
 };
 
 const formatNumber = (input: number) => String(input.toFixed(2)).padStart(6);
@@ -27,12 +27,13 @@ const executeBenchmark = async (label: string, benchmark: () => Promise<Readable
   const timeToFirstByte = [];
   const timeToLastByte = [];
 
+  global.gc();
   for (let i = 1; i <= SAMPLES; i++) {
     const start = performance.now();
     const response = await benchmark();
     if (response instanceof Stream) {
       response.once('data', () => timeToFirstByte.push(performance.now() - start));
-      await new Promise((resolve) => response.on('end', resolve));
+      await new Promise(resolve => response.on('end', resolve));
       // console.log(await toString(response));
     } else {
       timeToFirstByte.push(performance.now() - start);
@@ -50,7 +51,7 @@ const executeBenchmarks = async () => {
   await executeBenchmark('Simple Template Tag', simpleTemplateTagBenchmark);
   await executeBenchmark('Advanced Template Tag', advancedTemplateTagBenchmark);
   await executeBenchmark('Streaming Template Tag', streamingTemplateTagBenchmark);
-  // await executeBenchmark('Simple WASM Template Tag', simpleWasm);
+  await executeBenchmark('@nanoweb/template (current)', currentVersionBenchmark);
 };
 
 executeBenchmarks();
