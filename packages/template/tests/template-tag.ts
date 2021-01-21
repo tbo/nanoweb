@@ -71,28 +71,30 @@ describe('Template tag', () => {
     );
   });
 
-  // test('Render embedded nested async lists', async () => {
-  //   await matchSnapshot(
-  //     () => html`
-  //       <div>
-  //         ${Promise.resolve([
-  //           html`<h1>headline</h1>`,
-  //           undefined,
-  //           unsafeHtml('<div>test</div>'),
-  //           123,
-  //           'some text',
-  //           null,
-  //           Promise.resolve([
-  //             html`<h1>headline</h1>`,
-  //             undefined,
-  //             unsafeHtml('<div>test</div>'),
-  //             123,
-  //             'some text',
-  //             null,
-  //           ]) as any,
-  //         ])}
-  //       </div>
-  //     `,
-  //   );
-  // });
+  test('Render embedded nested async lists', async () => {
+    await matchSnapshot(
+      () => html`
+        <div>
+          ${Promise.resolve([
+            html`<h1>headline</h1>`,
+            undefined,
+            unsafeHtml('<div>test</div>'),
+            '<script>escaped</script>',
+            123,
+            'some text',
+            null,
+            Promise.resolve([
+              html`<h1>headline</h1>`,
+              undefined,
+              unsafeHtml('<div>test</div>'),
+              '<script>escaped</script>',
+              123,
+              'some text',
+              null,
+            ]) as any,
+          ])}
+        </div>
+      `,
+    );
+  });
 });

@@ -58,9 +58,7 @@ describe('Render to string', () => {
       `,
       { transformResult: addWebComponentScripts },
     );
-  });
 
-  test('with nested web components and transformer', async () => {
     await matchSnapshot(
       () => html`
         <html>
@@ -71,6 +69,60 @@ describe('Render to string', () => {
                 content
               </x-button>
             `}
+          </body>
+        </html>
+      `,
+      { transformResult: addWebComponentScripts },
+    );
+
+    await matchSnapshot(
+      () => html`
+        <html>
+          <head></head>
+          <body>
+            ${[
+              html`
+                <x-button>
+                  content
+                </x-button>
+              `,
+            ]}
+          </body>
+        </html>
+      `,
+      { transformResult: addWebComponentScripts },
+    );
+
+    await matchSnapshot(
+      () => html`
+        <html>
+          <head></head>
+          <body>
+            ${Promise.resolve(
+              html`
+                <x-button>
+                  content
+                </x-button>
+              `,
+            )}
+          </body>
+        </html>
+      `,
+      { transformResult: addWebComponentScripts },
+    );
+
+    await matchSnapshot(
+      () => html`
+        <html>
+          <head></head>
+          <body>
+            ${Promise.resolve([
+              html`
+                <x-button>
+                  content
+                </x-button>
+              `,
+            ])}
           </body>
         </html>
       `,
