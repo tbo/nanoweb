@@ -1,4 +1,4 @@
-import { Readable } from 'stream';
+import { Readable, Transform } from 'stream';
 import { html, Template, renderToStream, StreamRenderOptions } from '../src/index';
 
 const toString = (stream: Readable) => {
@@ -11,6 +11,20 @@ const matchSnapshot = async (getComponent: () => Template | Promise<Template>, o
   expect(await toString(renderToStream(getComponent(), options))).toMatchSnapshot();
 
 const nextTick = () => new Promise(resolve => setImmediate(resolve));
+
+const ReplaceTransform = (from: string, to: () => string) =>
+  new Transform({
+    transform(text: string, _encoding, done) {
+      this.push(text.replace(from, to()));
+      done();
+    },
+  });
+
+const addWebComponentScripts = (stream: Readable, webComponents: string[]): Readable => {
+  const to = () =>
+    webComponents.map((name: string) => `<script src="/assets/${name}.js"></script>`).join('') + '</body>';
+  return stream.pipe(ReplaceTransform('</body>', to));
+};
 
 const getAsyncGenerator = () => {
   const triggered: string[] = [];
@@ -111,5 +125,91 @@ describe('Render to stream', () => {
 
     // Every component should only be triggered once
     expect(triggered).toMatchObject(['A', 'B', 'C', 'F', 'G', 'H', 'D', 'E']);
+  });
+
+  test.skip('with web components and transformer', async () => {
+    await matchSnapshot(
+      () => html`
+        <html>
+          <head></head>
+          <body>
+            <x-button>
+              content
+            </x-button>
+          </body>
+        </html>
+      `,
+      { transformResult: addWebComponentScripts },
+    );
+
+    // await matchSnapshot(
+    //   () => html`
+    //     <html>
+    //       <head></head>
+    //       <body>
+    //         ${html`
+    //           <x-button>
+    //             content
+    //           </x-button>
+    //         `}
+    //       </body>
+    //     </html>
+    //   `,
+    //   { transformResult: addWebComponentScripts },
+    // );
+    //
+    // await matchSnapshot(
+    //   () => html`
+    //     <html>
+    //       <head></head>
+    //       <body>
+    //         ${[
+    //           html`
+    //             <x-button>
+    //               content
+    //             </x-button>
+    //           `,
+    //         ]}
+    //       </body>
+    //     </html>
+    //   `,
+    //   { transformResult: addWebComponentScripts },
+    // );
+    //
+    // await matchSnapshot(
+    //   () => html`
+    //     <html>
+    //       <head></head>
+    //       <body>
+    //         ${Promise.resolve(
+    //           html`
+    //             <x-button>
+    //               content
+    //             </x-button>
+    //           `,
+    //         )}
+    //       </body>
+    //     </html>
+    //   `,
+    //   { transformResult: addWebComponentScripts },
+    // );
+    //
+    // await matchSnapshot(
+    //   () => html`
+    //     <html>
+    //       <head></head>
+    //       <body>
+    //         ${Promise.resolve([
+    //           html`
+    //             <x-button>
+    //               content
+    //             </x-button>
+    //           `,
+    //         ])}
+    //       </body>
+    //     </html>
+    //   `,
+    //   { transformResult: addWebComponentScripts },
+    // );
   });
 });

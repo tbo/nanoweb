@@ -18,6 +18,8 @@ exports[`Render to stream Trigger and stream components eagerly 8`] = `"<div> <d
 
 exports[`Render to stream Trigger and stream components eagerly 9`] = `"<div> <div>Leaf A</div> <div>Leaf B</div>static1Nested: <div>Leaf D</div>static2Nested: <div>Leaf E</div>static3<div>Leaf G</div> <div>Leaf H</div></div> "`;
 
+exports[`Render to stream with web components and transformer 1`] = `"<html><head></head><body><x-button> content</x-button></body></html> "`;
+
 exports[`Render to stream with web components, but without options 1`] = `"<html><head></head><body><x-button> content</x-button></body></html> "`;
 
 exports[`Render to stream without options 1`] = `"<html><head></head><body> content</body></html> "`;
