@@ -29,7 +29,7 @@ npm install @nanoweb/template
 
 ```ts
 // Import lit-html
-import {html, renderToString} from 'lit-html';
+import {html, renderToString} from '@nanoweb/template';
 
 // Define a template
 const myTemplate = (name) => html`<p>Hello ${name}</p>`;
