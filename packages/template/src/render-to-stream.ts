@@ -1,28 +1,26 @@
 import { PassThrough, Readable } from 'stream';
 import { Template } from './html';
 
-export const resolve = async (
-  stream: PassThrough,
-  component: Template | Promise<Template>,
-  webComponents: string[],
-) => {
+const resolve = async (stream: PassThrough, component: Template | Promise<Template>, webComponents: string[]) => {
   const list = await component;
   webComponents.push(...list.webComponents);
   for (const item of list) {
     if (item != null && item !== false) {
       const resolvedItem = await item;
-      stream.write(
-        resolvedItem instanceof Template ? await resolve(stream, resolvedItem, webComponents) : resolvedItem,
-      );
+      if (resolvedItem instanceof Template) {
+        await resolve(stream, resolvedItem, webComponents);
+      } else {
+        stream.write(String(resolvedItem));
+      }
     }
   }
 };
 
-export interface RenderOptions {
+export interface StreamRenderOptions {
   transformResult?: (text: Readable, webComponents: string[]) => Readable;
 }
 
-export const renderToStream = (component: Template | Promise<Template>, options?: RenderOptions): Readable => {
+export const renderToStream = (component: Template | Promise<Template>, options?: StreamRenderOptions): Readable => {
   const sink = new PassThrough({});
   const webComponents: string[] = [];
   setImmediate(async () => {

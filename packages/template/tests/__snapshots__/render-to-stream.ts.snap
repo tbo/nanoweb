@@ -1,3 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render to stream with web components, but without options 1`] = `"<html><head></head><body><x-button> content</x-button></body></html> "`;
+
 exports[`Render to stream without options 1`] = `"<html><head></head><body> content</body></html> "`;

@@ -1,7 +1,18 @@
-import { html, Template, unsafeHtml, renderToString } from '../src/index';
+import { Readable } from 'stream';
+import { html, Template, unsafeHtml, renderToString, renderToStream } from '../src/index';
 
-const matchSnapshot = async (getComponent: () => Template | Promise<Template>) =>
-  expect(await renderToString(getComponent())).toMatchSnapshot();
+const toString = (stream: Readable): Promise<string> => {
+  let buffer = '';
+  stream.on('data', (data: string) => (buffer += data));
+  return new Promise(resolve => stream.on('end', () => resolve(buffer)));
+};
+
+const matchSnapshot = async (getComponent: () => Template | Promise<Template>) => {
+  const syncResult = await renderToString(getComponent());
+  const asyncResult = await toString(renderToStream(getComponent()));
+  expect(syncResult).toEqual(asyncResult);
+  expect(syncResult).toMatchSnapshot();
+};
 
 describe('Template tag', () => {
   test('Render simple template tag', async () => {
