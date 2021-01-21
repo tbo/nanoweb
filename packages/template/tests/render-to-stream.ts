@@ -10,6 +10,31 @@ const toString = (stream: Readable) => {
 const matchSnapshot = async (getComponent: () => Template | Promise<Template>, options?: StreamRenderOptions) =>
   expect(await toString(renderToStream(getComponent(), options))).toMatchSnapshot();
 
+const nextTick = () => new Promise(resolve => setImmediate(resolve));
+
+const getAsyncGenerator = () => {
+  const triggered: string[] = [];
+  const getComponent = (
+    id: string,
+    Custom?: () => Template | Promise<Template>,
+  ): [() => Promise<Template>, () => Promise<void>] => {
+    let resolvePromise: (value?: unknown) => void;
+    const signal = new Promise(resolve => (resolvePromise = resolve));
+    return [
+      async () => {
+        triggered.push(id);
+        await signal;
+        return Custom?.() ?? html`<div>Leaf ${id}</div>`;
+      },
+      async () => {
+        resolvePromise();
+        await nextTick();
+      },
+    ];
+  };
+  return { triggered, getComponent };
+};
+
 describe('Render to stream', () => {
   test('without options', async () => {
     await matchSnapshot(
@@ -37,5 +62,54 @@ describe('Render to stream', () => {
         </html>
       `,
     );
+  });
+
+  test('Trigger and stream components eagerly', async () => {
+    const { triggered, getComponent } = getAsyncGenerator();
+
+    const [LeafComponentA, triggerA] = getComponent('A');
+    const [LeafComponentB, triggerB] = getComponent('B');
+    const [LeafComponentD, triggerD] = getComponent('D');
+    const [LeafComponentC, triggerC] = getComponent('C', () => html`Nested: ${LeafComponentD()}`);
+    const [LeafComponentE, triggerE] = getComponent('E');
+    const [LeafComponentF, triggerF] = getComponent('F', () => html`Nested: ${LeafComponentE()}`);
+    const [LeafComponentG, triggerG] = getComponent('G');
+    const [LeafComponentH, triggerH] = getComponent('H');
+
+    const RootComponent = html`
+      <div>
+        ${LeafComponentA()}
+        ${[LeafComponentB(), html`static1`, LeafComponentC(), 'static2', LeafComponentF(), 'static3', LeafComponentG()]}
+        ${LeafComponentH()}
+      </div>
+    `;
+
+    let output = '';
+    const execute = () => renderToStream(RootComponent).on('data', data => (output += data));
+
+    // Trigger all components from top to bottom
+
+    execute();
+    await nextTick();
+    expect(output).toMatchSnapshot();
+    await triggerA();
+    expect(output).toMatchSnapshot();
+    await triggerB();
+    expect(output).toMatchSnapshot();
+    await triggerC();
+    expect(output).toMatchSnapshot();
+    await triggerD();
+    expect(output).toMatchSnapshot();
+    await triggerE();
+    expect(output).toMatchSnapshot();
+    await triggerF();
+    expect(output).toMatchSnapshot();
+    await triggerG();
+    expect(output).toMatchSnapshot();
+    await triggerH();
+    expect(output).toMatchSnapshot();
+
+    // Every component should only be triggered once
+    expect(triggered).toMatchObject(['A', 'B', 'C', 'F', 'G', 'H', 'D', 'E']);
   });
 });

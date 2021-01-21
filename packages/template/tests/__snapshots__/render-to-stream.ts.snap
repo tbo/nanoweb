@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render to stream Trigger and stream components eagerly 1`] = `"<div> "`;
+
+exports[`Render to stream Trigger and stream components eagerly 2`] = `"<div> <div>Leaf A</div> "`;
+
+exports[`Render to stream Trigger and stream components eagerly 3`] = `"<div> <div>Leaf A</div> <div>Leaf B</div>static1"`;
+
+exports[`Render to stream Trigger and stream components eagerly 4`] = `"<div> <div>Leaf A</div> <div>Leaf B</div>static1Nested: "`;
+
+exports[`Render to stream Trigger and stream components eagerly 5`] = `"<div> <div>Leaf A</div> <div>Leaf B</div>static1Nested: <div>Leaf D</div>static2"`;
+
+exports[`Render to stream Trigger and stream components eagerly 6`] = `"<div> <div>Leaf A</div> <div>Leaf B</div>static1Nested: <div>Leaf D</div>static2"`;
+
+exports[`Render to stream Trigger and stream components eagerly 7`] = `"<div> <div>Leaf A</div> <div>Leaf B</div>static1Nested: <div>Leaf D</div>static2Nested: <div>Leaf E</div>static3"`;
+
+exports[`Render to stream Trigger and stream components eagerly 8`] = `"<div> <div>Leaf A</div> <div>Leaf B</div>static1Nested: <div>Leaf D</div>static2Nested: <div>Leaf E</div>static3<div>Leaf G</div> "`;
+
+exports[`Render to stream Trigger and stream components eagerly 9`] = `"<div> <div>Leaf A</div> <div>Leaf B</div>static1Nested: <div>Leaf D</div>static2Nested: <div>Leaf E</div>static3<div>Leaf G</div> <div>Leaf H</div></div> "`;
+
 exports[`Render to stream with web components, but without options 1`] = `"<html><head></head><body><x-button> content</x-button></body></html> "`;
 
 exports[`Render to stream without options 1`] = `"<html><head></head><body> content</body></html> "`;
