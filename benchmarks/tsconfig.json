@@ -7,6 +7,7 @@
     "composite": true,
     "jsx": "react",
     "jsxFactory": "createElement",
+    "rootDir": "../"
   },
   "include": ["**/*.ts", "**/*.tsx", "../packages/template/src/**/*.ts"]
 }

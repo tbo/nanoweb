@@ -6,10 +6,11 @@ import simpleTemplateTagBenchmark from './simple-template-tag';
 import advancedTemplateTagBenchmark from './advanced-template-tag';
 import streamingTemplateTagBenchmark from './streaming-template-tag';
 import currentVersionBenchmark from './current-version';
+import publishedVersionBenchmark from './published-version';
 
 const SAMPLES = 1000;
 
-const toString = async (stream: Readable) => {
+const toString = (stream: Readable) => {
   let buffer = '';
   stream.on('data', (data: string) => (buffer += data.toString()));
   return new Promise(resolve => stream.on('end', () => resolve(buffer)));
@@ -27,6 +28,8 @@ const executeBenchmark = async (label: string, benchmark: () => Promise<Readable
   const timeToFirstByte = [];
   const timeToLastByte = [];
 
+  // Warmup
+  await benchmark();
   global.gc();
   for (let i = 1; i <= SAMPLES; i++) {
     const start = performance.now();
@@ -51,6 +54,7 @@ const executeBenchmarks = async () => {
   await executeBenchmark('Simple Template Tag', simpleTemplateTagBenchmark);
   await executeBenchmark('Advanced Template Tag', advancedTemplateTagBenchmark);
   await executeBenchmark('Streaming Template Tag', streamingTemplateTagBenchmark);
+  await executeBenchmark('@nanoweb/template (published)', publishedVersionBenchmark);
   await executeBenchmark('@nanoweb/template (current)', currentVersionBenchmark);
 };
 

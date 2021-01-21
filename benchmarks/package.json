@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/tbo/nanoweb#readme",
   "dependencies": {
+    "@types/classnames": "^2.2.11",
     "classnames": "^2.2.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
