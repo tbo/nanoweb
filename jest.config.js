@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   projects: ['<rootDir>/packages/*'],
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],

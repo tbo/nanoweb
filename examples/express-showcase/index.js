@@ -51,7 +51,7 @@ const SearchResult = async search => {
   ).json();
 
   console.log(response.hits);
-  return response.hits.map(hit => hit.name);
+  return html`<div>${response.hits.map(hit => hit.name)}</div>`;
 };
 
 const FormExample = req => {

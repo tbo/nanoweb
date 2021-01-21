@@ -1,4 +1,4 @@
-import { html, Template, renderToString, RenderOptions } from '../src/index';
+import { html, Template, renderToString, RenderOptions, unsafeHtml } from '../src/index';
 
 const matchSnapshot = async (getComponent: () => Template | Promise<Template>, options?: RenderOptions) =>
   expect(await renderToString(getComponent(), options)).toMatchSnapshot();

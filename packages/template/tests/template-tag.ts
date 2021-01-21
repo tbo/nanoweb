@@ -53,4 +53,21 @@ describe('Template tag', () => {
   test('Render embedded async template tag', async () => {
     await matchSnapshot(() => html`another async ${Promise.resolve(html`template tag`)}`);
   });
+
+  test('Render embedded async lists', async () => {
+    await matchSnapshot(
+      () => html`
+        <div>
+          ${Promise.resolve([
+            html`<h1>headline</h1>`,
+            undefined,
+            unsafeHtml('<div>test</div>'),
+            123,
+            'some text',
+            null,
+          ])}
+        </div>
+      `,
+    );
+  });
 });
