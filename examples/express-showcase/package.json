@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@nanoweb/links": "0.0.5",
-    "@nanoweb/template": "0.0.2",
+    "@nanoweb/template": "0.0.3",
     "express": "4.17.1",
     "node-fetch": "2.6.1"
   },
