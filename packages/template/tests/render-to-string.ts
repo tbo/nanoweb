@@ -3,16 +3,12 @@ import { html, Template, renderToString, RenderOptions } from '../src/index';
 const matchSnapshot = async (getComponent: () => Template | Promise<Template>, options?: RenderOptions) =>
   expect(await renderToString(getComponent(), options)).toMatchSnapshot();
 
-const addWebComponentScripts = (text: string, webComponents: string[]) => {
+export const addWebComponentScripts = (text: string, webComponents: string[]) => {
   if (!webComponents.length) {
     return text;
   }
-  const index = text.lastIndexOf('</body>');
-  return (
-    text.slice(0, index) +
-    webComponents.map((name: string) => `<script src="/assets/${name}.js"></script>`).join('') +
-    text.slice(index)
-  );
+  const to = webComponents.map((name: string) => `<script src="/assets/${name}.js"></script>`).join('') + '</body>';
+  return text.replace('</body>', to);
 };
 
 describe('Render to string', () => {

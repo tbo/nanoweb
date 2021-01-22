@@ -1,4 +1,4 @@
-import { Readable, Transform } from 'stream';
+import { Readable } from 'stream';
 import { html, Template, renderToStream, StreamRenderOptions } from '../src/index';
 
 const toString = (stream: Readable) => {
@@ -12,18 +12,12 @@ const matchSnapshot = async (getComponent: () => Template | Promise<Template>, o
 
 const nextTick = () => new Promise(resolve => setImmediate(resolve));
 
-const ReplaceTransform = (from: string, to: () => string) =>
-  new Transform({
-    transform(text: string, _encoding, done) {
-      this.push(text.replace(from, to()));
-      done();
-    },
-  });
-
-const addWebComponentScripts = (stream: Readable, webComponents: string[]): Readable => {
-  const to = () =>
-    webComponents.map((name: string) => `<script src="/assets/${name}.js"></script>`).join('') + '</body>';
-  return stream.pipe(ReplaceTransform('</body>', to));
+export const addWebComponentScripts = (text: string, webComponents: string[]) => {
+  if (!webComponents.length) {
+    return text;
+  }
+  const to = webComponents.map((name: string) => `<script src="/assets/${name}.js"></script>`).join('') + '</body>';
+  return text.replace('</body>', to);
 };
 
 const getAsyncGenerator = () => {
@@ -127,7 +121,7 @@ describe('Render to stream', () => {
     expect(triggered).toMatchObject(['A', 'B', 'C', 'F', 'G', 'H', 'D', 'E']);
   });
 
-  test.skip('with web components and transformer', async () => {
+  test('with web components and transformer', async () => {
     await matchSnapshot(
       () => html`
         <html>

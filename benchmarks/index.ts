@@ -9,7 +9,7 @@ import currentVersionBenchmark from './current-version';
 import currentStreamVersionBenchmark from './current-stream-version';
 import publishedVersionBenchmark from './published-version';
 
-const SAMPLES = 1000;
+const SAMPLES = 10000;
 
 const toString = (stream: Readable) => {
   let buffer = '';
@@ -58,12 +58,12 @@ const executeBenchmark = async (label: string, benchmark: () => Promise<Readable
 };
 
 const executeBenchmarks = async () => {
-  await executeBenchmark('JSX Rev. 1', jsxRev1Benchmark);
-  await executeBenchmark('React', reactBenchmark);
-  await executeBenchmark('Simple Template Tag', simpleTemplateTagBenchmark);
-  await executeBenchmark('Advanced Template Tag', advancedTemplateTagBenchmark);
-  await executeBenchmark('Streaming Template Tag', streamingTemplateTagBenchmark);
-  await executeBenchmark('@nanoweb/template (published)', publishedVersionBenchmark);
+  // await executeBenchmark('JSX Rev. 1', jsxRev1Benchmark);
+  // await executeBenchmark('React', reactBenchmark);
+  // await executeBenchmark('Simple Template Tag', simpleTemplateTagBenchmark);
+  // await executeBenchmark('Advanced Template Tag', advancedTemplateTagBenchmark);
+  // await executeBenchmark('Streaming Template Tag', streamingTemplateTagBenchmark);
+  // await executeBenchmark('@nanoweb/template (published)', publishedVersionBenchmark);
   await executeBenchmark('@nanoweb/template String (current)', currentVersionBenchmark);
   await executeBenchmark('@nanoweb/template Stream (current)', currentStreamVersionBenchmark);
 };

@@ -16,39 +16,38 @@ const resolve = async (stream: PassThrough, component: Template | Promise<Templa
   }
 };
 
+type Transformer = (text: string, webComponents: string[]) => string;
+
 export interface StreamRenderOptions {
-  transformResult?: (text: Readable, webComponents: string[]) => Readable;
+  transformResult?: Transformer;
   bufferSize?: number;
 }
 
-const getBuffer = (bufferSize = 1024) => {
+const getBuffer = (bufferSize = 1024, webComponents: string[], transform?: Transformer) => {
   let buffer = '';
   return new Transform({
     decodeStrings: false,
     transform(text: string, _encoding, done) {
       buffer += text;
       if (buffer.length >= bufferSize) {
-        this.push(buffer);
+        this.push(transform?.(buffer, webComponents) || buffer);
         buffer = '';
       }
       done();
     },
     final(this, done) {
-      this.push(buffer);
+      this.push(transform?.(buffer, webComponents) || buffer);
       done();
     },
   });
 };
 
 export const renderToStream = (component: Template | Promise<Template>, options?: StreamRenderOptions): Readable => {
-  const sink = getBuffer(options?.bufferSize);
   const webComponents: string[] = [];
+  const sink = getBuffer(options?.bufferSize, webComponents, options?.transformResult);
   setImmediate(async () => {
     await resolve(sink, component, webComponents);
     sink.end();
   });
-  if (options?.transformResult) {
-    return options.transformResult(sink, [...new Set(webComponents)]);
-  }
   return sink;
 };
