@@ -136,74 +136,74 @@ describe('Render to stream', () => {
       { transformResult: addWebComponentScripts },
     );
 
-    // await matchSnapshot(
-    //   () => html`
-    //     <html>
-    //       <head></head>
-    //       <body>
-    //         ${html`
-    //           <x-button>
-    //             content
-    //           </x-button>
-    //         `}
-    //       </body>
-    //     </html>
-    //   `,
-    //   { transformResult: addWebComponentScripts },
-    // );
-    //
-    // await matchSnapshot(
-    //   () => html`
-    //     <html>
-    //       <head></head>
-    //       <body>
-    //         ${[
-    //           html`
-    //             <x-button>
-    //               content
-    //             </x-button>
-    //           `,
-    //         ]}
-    //       </body>
-    //     </html>
-    //   `,
-    //   { transformResult: addWebComponentScripts },
-    // );
-    //
-    // await matchSnapshot(
-    //   () => html`
-    //     <html>
-    //       <head></head>
-    //       <body>
-    //         ${Promise.resolve(
-    //           html`
-    //             <x-button>
-    //               content
-    //             </x-button>
-    //           `,
-    //         )}
-    //       </body>
-    //     </html>
-    //   `,
-    //   { transformResult: addWebComponentScripts },
-    // );
-    //
-    // await matchSnapshot(
-    //   () => html`
-    //     <html>
-    //       <head></head>
-    //       <body>
-    //         ${Promise.resolve([
-    //           html`
-    //             <x-button>
-    //               content
-    //             </x-button>
-    //           `,
-    //         ])}
-    //       </body>
-    //     </html>
-    //   `,
-    //   { transformResult: addWebComponentScripts },
-    // );
+    await matchSnapshot(
+      () => html`
+        <html>
+          <head></head>
+          <body>
+            ${html`
+              <x-button>
+                content
+              </x-button>
+            `}
+          </body>
+        </html>
+      `,
+      { transformResult: addWebComponentScripts },
+    );
+
+    await matchSnapshot(
+      () => html`
+        <html>
+          <head></head>
+          <body>
+            ${[
+              html`
+                <x-button>
+                  content
+                </x-button>
+              `,
+            ]}
+          </body>
+        </html>
+      `,
+      { transformResult: addWebComponentScripts },
+    );
+
+    await matchSnapshot(
+      () => html`
+        <html>
+          <head></head>
+          <body>
+            ${Promise.resolve(
+              html`
+                <x-button>
+                  content
+                </x-button>
+              `,
+            )}
+          </body>
+        </html>
+      `,
+      { transformResult: addWebComponentScripts },
+    );
+
+    await matchSnapshot(
+      () => html`
+        <html>
+          <head></head>
+          <body>
+            ${Promise.resolve([
+              html`
+                <x-button>
+                  content
+                </x-button>
+              `,
+            ])}
+          </body>
+        </html>
+      `,
+      { transformResult: addWebComponentScripts },
+    );
   });
 });
