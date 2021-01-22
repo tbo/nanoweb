@@ -18,6 +18,10 @@ exports[`Render to stream Trigger and stream components eagerly 8`] = `"<div> <d
 
 exports[`Render to stream Trigger and stream components eagerly 9`] = `"<div> <div>Leaf A</div> <div>Leaf B</div>static1Nested: <div>Leaf D</div>static2Nested: <div>Leaf E</div>static3<div>Leaf G</div> <div>Leaf H</div></div> "`;
 
+exports[`Render to stream with duplicate web components 1`] = `"<html><head></head><body><x-button> content</x-button><x-button> content</x-button><script src=\\"/assets/x-button.js\\"></script></body></html> "`;
+
+exports[`Render to stream with duplicate web components 2`] = `"<html><head></head><body><x-button> content</x-button> <x-button> content</x-button> <script src=\\"/assets/x-button.js\\"></script></body></html> "`;
+
 exports[`Render to stream with web components and transformer 1`] = `"<html><head></head><body><x-button> content</x-button><script src=\\"/assets/x-button.js\\"></script></body></html> "`;
 
 exports[`Render to stream with web components and transformer 2`] = `"<html><head></head><body> <x-button> content</x-button> <script src=\\"/assets/x-button.js\\"></script></body></html> "`;

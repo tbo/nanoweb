@@ -30,13 +30,13 @@ const getBuffer = (bufferSize = 1024, webComponents: string[], transform?: Trans
     transform(text: string, _encoding, done) {
       buffer += text;
       if (buffer.length >= bufferSize) {
-        this.push(transform?.(buffer, webComponents) || buffer);
+        this.push(transform?.(buffer, [...new Set(webComponents)]) || buffer);
         buffer = '';
       }
       done();
     },
     final(this, done) {
-      this.push(transform?.(buffer, webComponents) || buffer);
+      this.push(transform?.(buffer, [...new Set(webComponents)]) || buffer);
       done();
     },
   });

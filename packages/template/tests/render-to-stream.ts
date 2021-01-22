@@ -206,4 +206,42 @@ describe('Render to stream', () => {
       { transformResult: addWebComponentScripts },
     );
   });
+
+  test('with duplicate web components', async () => {
+    await matchSnapshot(
+      () => html`
+        <html>
+          <head></head>
+          <body>
+            <x-button>
+              content
+            </x-button>
+            <x-button>
+              content
+            </x-button>
+          </body>
+        </html>
+      `,
+      { transformResult: addWebComponentScripts },
+    );
+
+    await matchSnapshot(
+      () => html`
+        <html>
+          <head></head>
+          <body>
+            <x-button>
+              content
+            </x-button>
+            ${html`
+              <x-button>
+                content
+              </x-button>
+            `}
+          </body>
+        </html>
+      `,
+      { transformResult: addWebComponentScripts },
+    );
+  });
 });
