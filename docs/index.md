@@ -27,13 +27,6 @@ The [nanoweb links package](https://www.npmjs.com/package/@nanoweb/links) makes 
 
 The real benefit of this solution kicks in once we need to keep state on the client. It is not required to repeatedly rehydrate the frontend anymore. We can keep the UI state always in memory and avoid flashing content. It shares some resemblance with [Turbolinks](https://github.com/turbolinks/turbolinks). But instead of simply swapping `body` content, we merge it with [morphdom](https://github.com/patrick-steele-idem/morphdom) to avoid loosing form state.
 
-Using `@nanoweb/links` can be as simple as adding a script tag to a page:
-
-```html
-<script src="https://unpkg.com/@nanoweb/links"></script>
-```
-If you want to know...
-
 ## Templates
 
 Templates are tagged [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) - they look like JavaScript strings but are enclosed in backticks (`` ` ``) instead of quotes - and tagged with `@nanoweb/template`'s `html` tag:

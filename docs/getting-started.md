@@ -6,29 +6,63 @@ slug: getting-started
 
 ## Installation
 
-The template utilities are distributed on npm, in the [@nanoweb/template package](https://www.npmjs.com/package/@nanoweb/template).
+The nanoweb utilities are distributed via separate autonomous npm packages: [@nanoweb/template](https://www.npmjs.com/package/@nanoweb/template) and [@nanoweb/links](https://www.npmjs.com/package/@nanoweb/links).
 
 ```bash
-npm install @nanoweb/template
+npm install @nanoweb/template @nanoweb/links
 ```
 
-<!-- ### Online editors -->
-<!--  -->
-<!-- You can try out lit-html without installing anything using an online editor. Below are links to a simple lit-html starter project in some popular online editors: -->
-<!--  -->
-<!-- *   [CodeSandbox](https://codesandbox.io/s/wq2wm73o28){:target="_blank"} -->
-<!-- *   [JSBin](https://jsbin.com/nahocaq/1/edit?html,output){:target="_blank"} -->
-<!-- *   [StackBlitz](https://stackblitz.com/edit/js-pku9ae?file=index.js){:target="_blank"} -->
+### Online editors
 
-## Rendering a Template
+You can try out nanoweb without installing anything using an online editor. Below is a link to a complete express showcase:
 
-`@nanoweb/template` has two main APIs:
 
-*   The `html` template tag used to write templates.
-*   The `renderToString()` function used to render a template and return it as a string.
+<a href="https://codesandbox.io/s/determined-noyce-b5fbf" target="_blank">Express Showcase on CodeSandbox</a>
 
+<div class="alert alert-info">
+
+Some editors (e.g. CodeSandbox) require a `/*html*/` comment before the template literal for proper syntax highlighting. You can improve the experience with the plugins outlined under [Tools](./template/08-tools.html).
+
+</div>
+
+The example is also available on <a href="https://github.com/tbo/nanoweb/tree/master/examples/express-showcase" target="_blank">Github</a>.
+
+## Importing
+
+`@nanoweb/template` and `@nanoweb/links` run in different environments and therefore support different import options.
+
+### Template
+NodeJs supports importing via [ECMAScript modules](https://nodejs.org/api/esm.html):
+```js
+import {html, renderToString} from '@nanoweb/template';
+```
+... or [CommonJs](https://nodejs.org/docs/latest/api/modules.html):
+
+```js
+const {html, renderToString} = require('@nanoweb/template');
+```
+Choosing a format is a matter of personal preference.
+
+### Links
+
+Using `@nanoweb/links` can be as simple as adding a script tag to a page:
+```js
+<script src="https://unpkg.com/@nanoweb/links"></script>
+```
+This will include the latest standalone version of `@nanoweb/links`. Yet it is recommended to import and bundle it with a module bundler (e.g. [Webpack](https://webpack.js.org/), [Rollup](https://rollupjs.org/) or [Parcel](https://parceljs.org/)).
+```js
+import links from '@nanoweb/links';
+
+window.addEventListener('DOMContentLoaded', () => {
+  links({ defaultLoadingAnimation: true });
+});
+```
+This is the only way to provide `@nanoweb/links` with [options]().
+
+## Echo Example
+
+An example is worth a thousand words:
 ```ts
-// Import lit-html
 import {html, renderToString} from '@nanoweb/template';
 
 // Define a template
