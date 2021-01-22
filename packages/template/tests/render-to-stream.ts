@@ -99,7 +99,7 @@ describe('Render to stream', () => {
     `;
 
     let output = '';
-    const execute = () => renderToStream(RootComponent).on('data', data => (output += data));
+    const execute = () => renderToStream(RootComponent, { bufferSize: 0 }).on('data', data => (output += data));
 
     // Trigger all components from top to bottom
 

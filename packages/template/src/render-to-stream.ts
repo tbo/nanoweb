@@ -1,4 +1,4 @@
-import { PassThrough, Readable } from 'stream';
+import { PassThrough, Readable, Transform } from 'stream';
 import { Template } from './html';
 
 const resolve = async (stream: PassThrough, component: Template | Promise<Template>, webComponents: string[]) => {
@@ -18,10 +18,30 @@ const resolve = async (stream: PassThrough, component: Template | Promise<Templa
 
 export interface StreamRenderOptions {
   transformResult?: (text: Readable, webComponents: string[]) => Readable;
+  bufferSize?: number;
 }
 
+const getBuffer = (bufferSize = 1024) => {
+  let buffer = '';
+  return new Transform({
+    decodeStrings: false,
+    transform(text: string, _encoding, done) {
+      buffer += text;
+      if (buffer.length >= bufferSize) {
+        this.push(buffer);
+        buffer = '';
+      }
+      done();
+    },
+    final(this, done) {
+      this.push(buffer);
+      done();
+    },
+  });
+};
+
 export const renderToStream = (component: Template | Promise<Template>, options?: StreamRenderOptions): Readable => {
-  const sink = new PassThrough({});
+  const sink = getBuffer(options?.bufferSize);
   const webComponents: string[] = [];
   setImmediate(async () => {
     await resolve(sink, component, webComponents);
