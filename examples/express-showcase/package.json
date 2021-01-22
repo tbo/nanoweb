@@ -4,10 +4,10 @@
   "description": "nanoweb express showcase",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "nodemon index.js"
   },
   "dependencies": {
-    "@nanoweb/links": "0.0.5",
+    "@nanoweb/links": "0.0.6",
     "@nanoweb/template": "0.0.3",
     "express": "4.17.1",
     "node-fetch": "2.6.1"
