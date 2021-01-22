@@ -39,8 +39,8 @@ const resolve = (element: TemplateElement): any => {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;')
       .replace(/`/g, '&#96;');
-  } else {
-    return element;
+  } else if (element || element === 0) {
+    return String(element);
   }
 };
 

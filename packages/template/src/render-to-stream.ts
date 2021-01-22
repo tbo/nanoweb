@@ -5,12 +5,12 @@ const resolve = async (stream: PassThrough, component: Template | Promise<Templa
   const list = await component;
   webComponents.push(...list.webComponents);
   for (const item of list) {
-    if (item != null && item !== false) {
+    if (item !== undefined) {
       const resolvedItem = await item;
       if (resolvedItem instanceof Template) {
         await resolve(stream, resolvedItem, webComponents);
       } else {
-        stream.write(String(resolvedItem));
+        stream.write(resolvedItem);
       }
     }
   }
