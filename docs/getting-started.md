@@ -46,7 +46,7 @@ Choosing a format is a matter of personal preference.
 ### Links
 
 Using `@nanoweb/links` can be as simple as adding a script tag to a page:
-```js
+```html
 <script src="https://unpkg.com/@nanoweb/links"></script>
 ```
 This will include the latest standalone version of `@nanoweb/links`. Yet it is recommended to import and bundle it with a module bundler (e.g. [Webpack](https://webpack.js.org/), [Rollup](https://rollupjs.org/) or [Parcel](https://parceljs.org/)).
@@ -62,16 +62,45 @@ This is the only way to provide `@nanoweb/links` with [options]().
 ## Echo Example
 
 An example is worth a thousand words:
-```ts
-import {html, renderToString} from '@nanoweb/template';
-
-// Define a template
-const myTemplate = (name) => html`<p>Hello ${name}</p>`;
-
-// Render the template
-renderToString(myTemplate('World'))
-  .then(text => console.log(text); // => "<p>Hello World</p>"
-
+```bash
+$ mkdir echo-demo
+$ cd echo-demo
+$ npm init # follow the instructions
+$ npm install --save @nanoweb/template @nanoweb/links express
 ```
+Save this under `index.js`:
+```ts
+const express = require("express");
+const { renderToStream, html } = require("@nanoweb/template");
+
+const Page = (name) => html`
+  <html>
+    <head>
+      <title>Echo Example</title>
+    </head>
+    <body style="text-align: center">
+      <h1>Echo Example</h1>
+      <form method="GET" action="/" autocomplete="off">
+        <input type="text" name="name" autofocus />
+      </form>
+      ${name
+        ? html`<b>Hello ${name}!</b>`
+        : "Enter your name above and press enter!"}
+      <script src="/static/links.standalone.min.js"></script>
+    </body>
+  </html>
+`;
+
+express()
+  .use("/static/", express.static("./node_modules/@nanoweb/links/dist/"))
+  .get("/", (req, res) => renderToStream(Page(req.query.name)).pipe(res))
+  .listen(3000);
+```
+
+Run it with:
+```bash
+$ node index.js
+```
+You can access it on [http://localhost:3000/](http://localhost:3000/).
 
 To learn more about templates, see [Writing Templates](./template/writing-templates).
