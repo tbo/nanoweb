@@ -3,15 +3,9 @@ const markdownIt = require('markdown-it');
 const pluginTOC = require('eleventy-plugin-nesting-toc');
 const markdownItAnchor = require('markdown-it-anchor');
 const markdownItAttrs = require('markdown-it-attrs');
-const slugifyLib = require('slugify');
-const path = require('path');
 const loadLanguages = require('prismjs/components/');
 // This Prism langauge supports HTML and CSS in tagged template literals
 loadLanguages(['js-templates']);
-
-// Use the same slugify as 11ty for markdownItAnchor. It's similar to Jekyll,
-// and preserves the existing URL fragments
-const slugify = s => slugifyLib(s, { lower: true });
 
 module.exports = function (eleventyConfig) {
   const addCollection = name => {
@@ -19,7 +13,7 @@ module.exports = function (eleventyConfig) {
       // Order the 'guide' collection by filename, which includes a number prefix.
       // We could also order by a frontmatter property
       return collection.getFilteredByGlob(`./docs/${name}/*`).sort(function (a, b) {
-        if (a.fileSlug == 'template') {
+        if (['template', 'links'].includes(a.fileSlug)) {
           return -1;
         }
         if (a.fileSlug < b.fileSlug) {

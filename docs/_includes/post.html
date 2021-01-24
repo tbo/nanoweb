@@ -24,6 +24,13 @@ layout: default
       {% endfor %}
     </ul>
     <div class="title">Links</div>
+    <ul>
+      {% for item in collections.links%}
+        <li class="{% if page.url == item.url %}active{% endif %}">
+          <a href="{{site.baseurl}}{{ item.url }}">{{item.data.title}}</a>
+        </li>
+      {% endfor %}
+    </ul>
   </nav>
 
   <article>
