@@ -19,7 +19,9 @@ const resolve = async (stream: PassThrough, component: Template | Promise<Templa
 type Transformer = (text: string, webComponents: string[]) => string;
 
 export interface StreamRenderOptions {
+  /** Allows to apply a transformation to each chunk of stream output */
   transformResult?: Transformer;
+  /** Allows to set a custom buffer size in byte. Default: 1024 */
   bufferSize?: number;
 }
 

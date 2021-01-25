@@ -3,13 +3,18 @@ const whitespace = /\r\n|\n|\r|(\s{1,}(?=<))/g;
 
 const cache = new Map();
 
-type AtomicValues = false | string | number | undefined | null | Template | UnsafeHtml;
+export type TemplateElement =
+  | false
+  | string
+  | number
+  | undefined
+  | null
+  | Template
+  | UnsafeHtml
+  | TemplateElement[]
+  | Promise<TemplateElement>;
 
-export type Child = AtomicValues | Promise<AtomicValues> | Promise<AtomicValues[]>;
-
-export type TemplateElement = Child | Child[];
-
-export class Template extends Array<TemplateElement> {
+export class Template extends Array {
   public webComponents: string[];
 
   constructor(webComponents?: string[]) {
@@ -20,6 +25,9 @@ export class Template extends Array<TemplateElement> {
 
 class UnsafeHtml extends String {}
 
+/**
+ * Marks strings that shouldn't be escaped
+ */
 export const unsafeHtml = (value = '') => new UnsafeHtml(value);
 
 const WEB_COMPONENT_PATTERN = /(?:<| is=")([a-zA-Z0-9]+-[a-zA-Z0-9-]+)/g;
@@ -44,7 +52,7 @@ const resolve = (element: TemplateElement): any => {
   }
 };
 
-export const html = (literalSections: TemplateStringsArray, ...substs: TemplateElement[]) => {
+export const html = (literalSections: TemplateStringsArray, ...expressions: TemplateElement[]) => {
   let [raw, webComponents] = cache.get(literalSections) || [undefined, undefined];
   if (raw === undefined) {
     raw = literalSections.raw.map((item: string) => item.replace(whitespace, '').replace(repeatedWhitespace, ' '));
@@ -54,9 +62,9 @@ export const html = (literalSections: TemplateStringsArray, ...substs: TemplateE
     cache.set(literalSections, [raw, webComponents]);
   }
   const result = new Template(webComponents);
-  for (let i = 0; i < substs.length; i++) {
+  for (let i = 0; i < expressions.length; i++) {
     result.push(raw[i]);
-    result.push(resolve(substs[i]));
+    result.push(resolve(expressions[i]));
   }
   result.push(raw[raw.length - 1]);
   return result;

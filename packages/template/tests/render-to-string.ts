@@ -1,6 +1,6 @@
-import { html, Template, renderToString, RenderOptions } from '../src/index';
+import { html, Template, renderToString, StringRenderOptions } from '../src/index';
 
-const matchSnapshot = async (getComponent: () => Template | Promise<Template>, options?: RenderOptions) =>
+const matchSnapshot = async (getComponent: () => Template | Promise<Template>, options?: StringRenderOptions) =>
   expect(await renderToString(getComponent(), options)).toMatchSnapshot();
 
 export const addWebComponentScripts = (text: string, webComponents: string[]) => {

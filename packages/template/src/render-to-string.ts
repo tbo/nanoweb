@@ -13,11 +13,12 @@ export const resolve = async (component: Template | Promise<Template>, webCompon
   return buffer;
 };
 
-export interface RenderOptions {
+export interface StringRenderOptions {
+  /** Allows to apply a final transformation of the rendered string */
   transformResult?: (text: string, webComponents: string[]) => string;
 }
 
-export const renderToString = async (component: Template | Promise<Template>, options?: RenderOptions) => {
+export const renderToString = async (component: Template | Promise<Template>, options?: StringRenderOptions) => {
   const webComponents: string[] = [];
   const buffer = await resolve(component, webComponents);
   if (options?.transformResult) {

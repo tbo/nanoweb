@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "module":"CommonJS",
+    "target": "esnext",
+    "lib": ["esnext", "DOM"],
+    "rootDir": "../packages",
+    "esModuleInterop": true,
+  },
+  "include": ["../packages/**/*.ts"],
+  "typedocOptions": {
+    "entryPoints": ["packages/template/src/index.ts", "packages/links/src/links.ts"],
+    "out": "_site/api",
+    "exclude": ["**/node_modules/**", "**/benchmarks/**/*", "**/benchmarks/**/*.tsx", "./benchmarks/tsconfig.json"]
+  }
+}

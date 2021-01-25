@@ -226,6 +226,9 @@ const handleTransition = async (targetUrl: string, body?: BodyInit) => {
 const saveScrollPosition = () =>
   window.history.replaceState({ scrollPosition: [window.scrollX, window.scrollY] }, document.title);
 
+/**
+ * Triggers a page transition programmatically
+ */
 export const navigateTo = async (targetUrl: string, body?: BodyInit, target?: string | null, replace?: boolean) => {
   if (!targetUrl) {
     return;

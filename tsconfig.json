@@ -6,5 +6,5 @@
     "esModuleInterop": true,
     "strict": true,
   },
-  "references": [{ "path": "packages/template" }],
+  "references": [{ "path": "packages/template" }]
 }

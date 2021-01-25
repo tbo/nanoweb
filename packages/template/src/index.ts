@@ -1,4 +1,4 @@
 export * from './html';
-export * from './render-to-stream';
-export * from './render-to-string';
+export { renderToStream, StreamRenderOptions } from './render-to-stream';
+export { renderToString, StringRenderOptions } from './render-to-string';
 export * from './cache';

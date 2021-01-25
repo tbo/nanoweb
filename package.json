@@ -6,8 +6,10 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "docs": "eleventy --config=./docs/.eleventy.js",
-    "benchmark": "cd benchmarks && npm start"
+    "docs": "rm -fr _site && npm run docs:site && npm run docs:api",
+    "docs:site": "eleventy --config=./docs/.eleventy.js",
+    "benchmark": "cd benchmarks && npm start",
+    "docs:api": "typedoc --tsconfig ./docs/tsconfig.json"
   },
   "directories": {
     "doc": "docs"
@@ -40,6 +42,7 @@
     "markdown-it-attrs": "^4.0.0",
     "slugify": "^1.4.6",
     "ts-jest": "^26.4.4",
+    "typedoc": "^0.20.18",
     "typescript": "^4.1.3"
   },
   "dependencies": {

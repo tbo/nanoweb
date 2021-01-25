@@ -28,6 +28,7 @@ module.exports = function (eleventyConfig) {
   };
   eleventyConfig.addPassthroughCopy('./docs/css/');
   eleventyConfig.addPassthroughCopy('./docs/images/');
+  eleventyConfig.addPassthroughCopy('./docs/api/');
   eleventyConfig.addPlugin(pluginTOC, { tags: ['h2', 'h3'] });
   eleventyConfig.addPlugin(syntaxHighlight);
   addCollection('template');

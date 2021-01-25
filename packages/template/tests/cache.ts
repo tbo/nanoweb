@@ -1,8 +1,8 @@
-import { html, Template, renderToString, RenderOptions, cache } from '../src/index';
+import { html, Template, renderToString, StringRenderOptions, cache } from '../src/index';
 
 const nextTick = () => new Promise(resolve => setImmediate(resolve));
 
-const matchSnapshot = async (getComponent: () => Template | Promise<Template>, options?: RenderOptions) =>
+const matchSnapshot = async (getComponent: () => Template | Promise<Template>, options?: StringRenderOptions) =>
   expect(await renderToString(getComponent(), options)).toMatchSnapshot();
 
 describe('Cache templates', () => {
