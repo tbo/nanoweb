@@ -38,6 +38,6 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.setLibrary('md', md);
 
   return {
-    dir: { input: './docs', output: '_site' },
+    dir: { input: './docs', output: 'site' },
   };
 };

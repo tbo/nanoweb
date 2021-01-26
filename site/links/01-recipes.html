@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>Nanoweb  - Recipes</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/prism-okaidia-a11y.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Source+Code+Pro&family=Source+Serif+Pro:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <meta name="description" content="Nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs">
+  <meta name="keywords" content="HTML, SPA, JavaScript, Web Components, Template String Literals">
+</head>
+<body>
+  <a href="https://github.com/tbo/nanoweb" class="github-corner" aria-label="View source on GitHub">
+    <svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+  </a>
+  <main class="wrapper">
+  <nav class="side-nav" id="side-nav">
+    <button id="toggleNavButton" onClick="document.getElementById('side-nav').classList.toggle('open')">Menu</button>
+
+    <ul>
+      <li class="">
+        <a href="/">Introduction</a>
+      </li>
+      <li class="">
+        <a href="/getting-started.html">Getting Started</a>
+      </li>
+    </ul>
+    <div class="title">Template</div>
+    <ul>
+      
+        <li class="">
+          <a href="/template/01-writing-templates.html">Writing templates</a>
+        </li>
+      
+        <li class="">
+          <a href="/template/02-caching-templates.html">Caching templates</a>
+        </li>
+      
+        <li class="">
+          <a href="/template/03-render-templates.html">Render templates</a>
+        </li>
+      
+        <li class="">
+          <a href="/template/04-use-context.html">Use context</a>
+        </li>
+      
+        <li class="">
+          <a href="/template/08-tools.html">Tools</a>
+        </li>
+      
+      <li>
+        <a href="/api/modules/template_src.html">API</a>
+      </li>
+    </ul>
+    <div class="title">Links</div>
+    <ul>
+      
+        <li class="active">
+          <a href="/links/01-recipes.html">Recipes</a>
+        </li>
+      
+      <li>
+        <a href="/api/modules/links_src_links.html">API</a>
+      </li>
+    </ul>
+  </nav>
+
+  <article>
+    <h1>Recipes</h1>
+
+    <nav class="toc">
+                <ol>
+                    
+                    <li><a href="#keep-scroll-position-despite-page-transition">Keep scroll position despite page transition</a>
+            		</li>
+
+                    <li><a href="#preloading">Preloading</a>
+            		</li>
+
+                    <li><a href="#opt-out-of-dom-updates">Opt-out of DOM updates</a>
+            		</li>
+
+                    <li><a href="#opt-out-of-optimistic-updates">Opt-out of optimistic updates</a>
+            		</li>
+
+                    <li><a href="#animate-page-transitions">Animate page transitions</a>
+            		</li>
+
+                    <li><a href="#handle-conflicting-revisions">Handle conflicting revisions</a>
+            		</li>
+                </ol>
+            </nav>
+
+    <p><code>@nanoweb/links</code> tries to be indiscernible in its functionality from Multi Page Applications as possible. Yet there are some instances that require a special &quot;touch&quot; to provide the best UX possible.</p>
+<h2 id="keep-scroll-position-despite-page-transition">Keep scroll position despite page transition</h2>
+<p>Static web pages reset the scroll position on every page navigation. This can be quite disruptive if only very change occurred. You can opt-out of this default behavior by annotating links with a <code>replace</code> data attribute:</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>...<span class="token punctuation">"</span></span> <span class="token attr-name">data-replace</span> <span class="token punctuation">></span></span>...<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span></code></pre>
+<h2 id="preloading">Preloading</h2>
+<p>Preloading pages can make a big impact on the perceived performance of a website. Due to nanoweb's reliance on standard HTML it is possible to select from a number of different techniques and tools. Most approaches are based on <a href="https://www.smashingmagazine.com/2019/04/optimization-performance-resource-hints/">Resource Hints</a>. Yet it is not always easy to guess which pages to preload. There are a number of libs that can help you with this:</p>
+<ul>
+<li><a href="https://getquick.link/">Quicklink</a></li>
+<li><a href="http://instantclick.io/">InstantClick</a></li>
+<li><a href="https://instant.page/">instant.page</a></li>
+</ul>
+<p><code>@nanoweb/links</code> standalone bundle ships with <a href="https://instant.page/">instant.page</a> by default.</p>
+<h2 id="opt-out-of-dom-updates">Opt-out of DOM updates</h2>
+<p>Manual changes to the DOM will always be overridden by any following page transition. This can result in UI components loosing their visual state (e.g. closing Accordions or Dropdowns). To avoid these issues <a href="https://www.webcomponents.org/introduction">WebComponents</a> can be used to encapsulate UI state. <code>@nanoweb/links</code> will not mutate any elements contained inside a <a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM">Shadow DOM</a>.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">class</span> <span class="token class-name">Toggle</span> <span class="token keyword">extends</span> <span class="token class-name">HTMLElement</span> <span class="token punctuation">{</span><br>  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>    <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token keyword">const</span> toggleButton <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'BUTTON'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token keyword">const</span> slot <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'SLOT'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token keyword">const</span> root <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">attachShadow</span><span class="token punctuation">(</span><span class="token punctuation">{</span> mode<span class="token operator">:</span> <span class="token string">'open'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    toggleButton<span class="token punctuation">.</span>innerText <span class="token operator">=</span> <span class="token string">'Click here to toggle'</span><span class="token punctuation">;</span><br>    <span class="token keyword">const</span> <span class="token function-variable function">toggle</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span><br>        slot<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">=</span><br>            slot<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">===</span> <span class="token string">'none'</span> <span class="token operator">?</span> <span class="token string">'block'</span> <span class="token operator">:</span> <span class="token string">'none'</span><span class="token punctuation">;</span><br>    <span class="token punctuation">}</span><br>    toggleButton<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> toggle<span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token function">toggle</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    root<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>toggleButton<span class="token punctuation">)</span><span class="token punctuation">;</span><br>    root<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>slot<span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token punctuation">}</span><br><span class="token punctuation">}</span><br><br>window<span class="token punctuation">.</span>customElements<span class="token punctuation">.</span><span class="token function">define</span><span class="token punctuation">(</span><span class="token string">'x-toggle'</span><span class="token punctuation">,</span> Toggle<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This toggle component will retain its UI state even if other parts of the page or its children are being updated. Usage:</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>x-toggle</span><span class="token punctuation">></span></span><br>  This will be visible once you click on the button.<br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>x-toggle</span><span class="token punctuation">></span></span></code></pre>
+<h2 id="opt-out-of-optimistic-updates">Opt-out of optimistic updates</h2>
+<p>To improve the perceived performance of page navigations <code>@nanoweb/links</code> applies optimistic updates. It will use a cached version first (if available) and replace it later seamlessly with an up-to-date version. This works well for pages that change infrequently. Yet elements that do change frequently can cause a visible flicker. You can add the <code>lazy</code> data attribute to opt-out certain elements from optimistic updates.</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><br>    Items in basket: <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">data-lazy</span><span class="token punctuation">></span></span>6<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span><br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre>
+<h2 id="animate-page-transitions">Animate page transitions</h2>
+<p><code>@nanoweb/links</code> adds an <code>is-loading</code> class to the body element while a page transition is in progress. This can be used to animate the transition:</p>
+<pre class="language-css"><code class="language-css"><span class="token selector">body</span> <span class="token punctuation">{</span><br>  <span class="token property">transition</span><span class="token punctuation">:</span> opacity 150ms ease-in 16ms<span class="token punctuation">;</span><br><span class="token punctuation">}</span><br><br><span class="token selector">body.is-loading</span> <span class="token punctuation">{</span><br>  <span class="token property">opacity</span><span class="token punctuation">:</span> 0.75<span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
+<p>A default animation is already included and can be used by setting the <code>defaultLoadingAnimation</code> option.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">import</span> links <span class="token keyword">from</span> <span class="token string">'./links'</span><span class="token punctuation">;</span><br><br>window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'DOMContentLoaded'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span><br>  <span class="token function">links</span><span class="token punctuation">(</span><span class="token punctuation">{</span> defaultLoadingAnimation<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h2 id="handle-conflicting-revisions">Handle conflicting revisions</h2>
+<p>User sessions can be surprisingly long. This is usually not a problem for MPAs, because all resources are being reevaluated on every request. SPAs however have to handle updated APIs and bundles. <code>@nanoweb/links</code> is not directly affected by this, because it can handle any form of HTML. Yet your frontend components might be impacted. You can handle these scenarios by adding an revision ID for every release.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">import</span> links <span class="token keyword">from</span> <span class="token string">'./links'</span><span class="token punctuation">;</span><br><br>window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'DOMContentLoaded'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span><br>  <span class="token function">links</span><span class="token punctuation">(</span><span class="token punctuation">{</span> revision<span class="token operator">:</span> <span class="token string">'4.2'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><code>@nanoweb/links</code> will then check the <code>X-REVSISION</code> header on every response. A fullpage load is triggered, if both values are defined (links configuration and revision header) but differ.</p>
+
+  </article>
+</main>
+
+
+  <footer>
+      <div class="wrapper">
+        <div class="attribution">
+          Code licensed under the
+          <a target="_blank" rel="noreferrer" href="https://raw.githubusercontent.com/tbo/nanoweb/master/LICENSE">BSD License</a>.
+          Documentation licensed under CC BY 3.0.</br>
+          Parts of the documentation are based on works of <a href="https://www.polymer-project.org/">The Polymer Project</a>
+        </div>
+      </div>
+  </footer>
+  <script src="https://unpkg.com/@nanoweb/links@0.0.9/dist/links.standalone.min.js"></script>
+</body>
+</html>
