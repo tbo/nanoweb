@@ -10,7 +10,8 @@ loadingAnimation.innerHTML = `
   body.is-loading { opacity: 0.75; }
 `;
 
-const isLocalLink = (node: Node): boolean => ((node as HTMLElement).closest('a')?.href || '').indexOf('://') !== -1;
+const isLocalLink = (node: Node): boolean =>
+  ((node as HTMLElement).closest('a')?.getAttribute('href') || '').indexOf('://') === -1;
 
 const isTextInput = (node: Node): node is HTMLInputElement =>
   node.nodeName === 'INPUT' && ['email', 'text', 'password'].includes((node as HTMLInputElement).type);

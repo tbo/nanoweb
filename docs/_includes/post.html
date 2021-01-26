@@ -2,8 +2,8 @@
 layout: default
 ---
 <main class="wrapper">
-  <nav class="side-nav">
-    <button id="toggleNavButton">Menu</button>
+  <nav class="side-nav" id="side-nav">
+    <button id="toggleNavButton" onClick="document.getElementById('side-nav').classList.toggle('open')">Menu</button>
 
     <ul>
       <li class="{% if page.url == '/' %}active{% endif %}">
@@ -45,10 +45,3 @@ layout: default
     {{ content }}
   </article>
 </main>
-
-<script>
-  toggleNavButton.addEventListener('click', function(event) {
-    const nav = event.target.parentElement;
-    nav.classList.toggle('open');
-  });
-</script>
