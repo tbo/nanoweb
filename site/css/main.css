@@ -1,0 +1,475 @@
+/* Tagname styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Source Serif Pro', serif;
+  -webkit-font-smoothing: antialiased;
+  color: #222222;
+  font-size: 20px;
+  line-height: 1.5em;
+}
+
+a {
+  text-decoration: none;
+  font-style: italic;
+}
+
+a:active {
+  opacity: 0.8;
+}
+
+.toc a {
+  font-style: normal;
+}
+
+:target::before {
+  content: '';
+  display: block;
+  height: 60px;
+  margin-top: -60px;
+}
+
+h1 {
+  font-size: 40px;
+  line-height: 48px;
+  font-weight: normal;
+}
+h2 {
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: normal;
+}
+h3 {
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: normal;
+}
+h4 {
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: normal;
+}
+
+code {
+  background: #f5f5f5;
+  color: black;
+  padding: 2px 4px;
+  font-family: 'Source Code Pro', monospace !important;
+  border-radius: 3px;
+}
+
+a code {
+  color: inherit;
+}
+
+pre code {
+  padding: 0;
+}
+
+pre {
+  font-size: 16px !important;
+  padding: 20px 24px;
+  background: #f5f5f5;
+  overflow-x: auto;
+  max-width: 720px;
+  box-sizing: border-box;
+}
+
+/* Content area */
+main {
+  margin-top: 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.wrapper {
+  max-width: 1280px;
+}
+
+/* Main/left nav */
+.side-nav {
+  /* position: sticky works in Chrome, Firefox, Safari and Edge;
+  fallback to position: static for which the nav will just be part
+  of the scrolling content. */
+  position: -webkit-sticky;
+  position: sticky;
+  top: 60px;
+  padding: 40px 40px 40px 0;
+  width: 240px;
+  font-size: 0.96rem;
+  font-weight: 500;
+  z-index: 100;
+}
+
+.side-nav li a::before {
+  content: '❯ ';
+  font-family: 'Source Code Pro', monospace !important;
+  color: transparent;
+  margin-left: -17px;
+}
+
+.side-nav li.active a::before {
+  color: inherit;
+}
+
+.side-nav .title {
+  font-size: 16px;
+  font-weight: bolder;
+  margin-top: 20px;
+  color: #0f414a;
+}
+
+.side-nav > #toggleNavButton {
+  display: none;
+}
+
+.side-nav a {
+  font-style: normal;
+  margin: -6px -16px;
+  padding: 6px 16px;
+}
+
+.side-nav > ul {
+  margin: 0;
+  padding: 0;
+}
+
+.side-nav > ul ul {
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.side-nav li {
+  list-style-type: none;
+  margin: 10px 0;
+  line-height: 24px;
+}
+
+.side-nav li:not(.active) > a {
+  color: #222;
+}
+
+/* Article area */
+article {
+  flex: 1;
+  margin: 40px 0;
+  min-width: 1px;
+  max-width: 720px;
+}
+
+article .toc ol {
+  list-style-type: disc;
+}
+
+article .toc ol ol {
+  list-style-type: circle;
+}
+
+article h1 {
+  margin: 60px 0 16px 0;
+}
+article h1:first-child {
+  margin: 6px 0 16px 0;
+}
+
+article h2 {
+  margin: 60px 0 16px 0;
+}
+article h3,
+article h4 {
+  margin: 32px 0 8px 0;
+}
+
+article p {
+  margin: 16px 0;
+  max-width: 640px;
+}
+
+article ol,
+article ul {
+  max-width: 620px;
+  padding-left: 25px;
+}
+
+article ul li {
+  padding-left: 0px;
+  margin: 4px 0;
+}
+
+article ol li {
+  padding-left: 6px;
+  margin: 4px 0;
+}
+
+.alert {
+  position: relative;
+  margin: 24px 0;
+  padding: 1px 20px 1px 56px;
+  box-shadow: 0 0 2px #ccc;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.alert::before {
+  position: absolute;
+  top: 17px;
+  left: 17px;
+}
+
+.alert.alert-info::before {
+  content: url(/images/alerts/info.svg);
+}
+
+.alert.alert-warning::before {
+  content: url(/images/alerts/warning.svg);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+}
+
+footer .wrapper {
+  padding-top: 24px;
+  /* No spacing between child elements. */
+  font-size: 0px;
+}
+
+footer .attribution {
+  display: inline-block;
+  vertical-align: top;
+  font-size: 14px;
+  line-height: 24px;
+  margin-bottom: 24px;
+  color: #555;
+}
+
+@media screen and (min-width: 1400px) {
+  .wrapper {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media screen and (max-width: 1400px) {
+  .wrapper {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+}
+@media screen and (max-width: 1160px) {
+  #secondary-nav {
+    display: none;
+  }
+  .wrapper {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  .responsive-row {
+    margin-right: -12px;
+    margin-left: -12px;
+  }
+  .responsive-row > * {
+    padding: 0 12px;
+  }
+  .side-nav {
+    padding: 32px 24px 32px 0;
+  }
+  footer .group {
+    margin-right: 24px;
+  }
+  article {
+    margin: 32px 0;
+  }
+  .block {
+    margin-bottom: 24px;
+  }
+}
+@media screen and (max-width: 640px) {
+  :target::before {
+    height: 112px;
+    margin-top: -112px;
+  }
+
+  h1 {
+    font-size: 32px;
+    line-height: 42px;
+  }
+  h2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  h3 {
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  .responsive-row {
+    flex-direction: column;
+  }
+
+  /* doc page */
+  .side-nav {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    right: 0;
+    padding: 0;
+    width: auto;
+    height: auto;
+    background: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .side-nav > ul {
+    font-size: 1rem;
+  }
+
+  .side-nav > .title {
+    font-size: 1.05rem;
+  }
+
+  .side-nav > ul,
+  .side-nav > .title {
+    display: none;
+  }
+
+  .side-nav.open > ul,
+  .side-nav.open > .title {
+    display: block;
+    padding: 0 20px 0 40px;
+  }
+
+  .side-nav > #toggleNavButton {
+    display: block;
+    width: 100%;
+    height: 56px;
+    padding: 0 20px;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: inherit;
+    -webkit-appearance: none;
+  }
+
+  .side-nav > #toggleNavButton::before {
+    content: '\25b6  ';
+  }
+
+  .side-nav.open > #toggleNavButton::before {
+    content: '\25bc  ';
+  }
+
+  article {
+    margin: 0;
+    padding: 20px 0;
+  }
+
+  .side-nav + article {
+    margin-top: 56px;
+  }
+
+  .wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  footer .group {
+    width: 50%;
+    margin-right: 0;
+  }
+}
+
+.header-anchor {
+  display: none;
+}
+
+h1:hover a.header-anchor,
+h2:hover a.header-anchor,
+h3:hover a.header-anchor,
+h4:hover a.header-anchor,
+h5:hover a.header-anchor,
+h6:hover a.header-anchor {
+  display: inline;
+}
+
+p,
+li {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  /* text-align: justify; */
+  text-align: justify;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.side-nav,
+ol {
+  font-family: 'Roboto Slab', serif;
+}
+.github-corner:hover .octo-arm {
+  animation: octocat-wave 560ms ease-in-out;
+}
+@keyframes octocat-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  20%,
+  60% {
+    transform: rotate(-25deg);
+  }
+  40%,
+  80% {
+    transform: rotate(10deg);
+  }
+}
+@media (max-width: 640px) {
+  .github-corner {
+    display: none;
+  }
+}
+
+a,
+h1,
+h2,
+h3,
+h4 {
+  color: #0f414a;
+}
+
+.nav-item.active {
+  border-bottom: 2px solid #fff;
+}
+
+.alert-info {
+  background: #f5f5f5;
+}
+
+.alert-info code {
+  background: #fdfdfd;
+}
+
+@media screen and (max-width: 1160px) {
+  #section-snippet .responsive-row {
+    flex-direction: column;
+  }
+}

@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "docs": "rm -fr _site && npm run docs:site && npm run docs:api",
+    "docs": "rm -fr site && npm run docs:site && npm run docs:api",
     "docs:site": "eleventy --config=./docs/.eleventy.js",
     "benchmark": "cd benchmarks && npm start",
     "docs:api": "typedoc --tsconfig ./docs/tsconfig.json"
