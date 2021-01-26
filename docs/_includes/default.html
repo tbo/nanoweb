@@ -6,8 +6,7 @@ permalink: /{{ page.filePathStem }}.html
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <meta name="description" content="{{ site.description }}">
-  <title>{% if page.title %}{{ page.title }} &ndash;{% endif %} {{ site.name }}</title>
+  <title>Nanoweb {% if title != "Nanoweb" %} - {{ title }}{% endif %}</title>
   <link rel="stylesheet" href="{{site.baseurl}}/css/main.css">
   <link rel="stylesheet" href="{{site.baseurl}}/css/prism-okaidia-a11y.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -15,6 +14,8 @@ permalink: /{{ page.filePathStem }}.html
   <link rel="apple-touch-icon" sizes="180x180" href="{{site.baseurl}}/images/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="{{site.baseurl}}/images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="{{site.baseurl}}/images/favicon-16x16.png">
+  <meta name="description" content="Nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs">
+  <meta name="keywords" content="HTML, SPA, JavaScript, Web Components, Template String Literals">
 </head>
 <body>
   <a href="https://github.com/tbo/nanoweb" class="github-corner" aria-label="View source on GitHub">
@@ -26,7 +27,7 @@ permalink: /{{ page.filePathStem }}.html
       <div class="wrapper">
         <div class="attribution">
           Code licensed under the
-          <a target="_blank" href="https://raw.githubusercontent.com/tbo/nanoweb/master/LICENSE">BSD License</a>.
+          <a target="_blank" rel="noreferrer" href="https://raw.githubusercontent.com/tbo/nanoweb/master/LICENSE">BSD License</a>.
           Documentation licensed under CC BY 3.0.</br>
           Parts of the documentation are based on works of <a href="https://www.polymer-project.org/">The Polymer Project</a>
         </div>
