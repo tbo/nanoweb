@@ -11,6 +11,8 @@
   "typedocOptions": {
     "entryPoints": ["packages/template/src/index.ts", "packages/links/src/links.ts"],
     "out": "_site/api",
-    "exclude": ["**/node_modules/**", "**/benchmarks/**/*", "**/benchmarks/**/*.tsx", "./benchmarks/tsconfig.json"]
+    "exclude": ["**/node_modules/**", "**/benchmarks/**/*", "**/benchmarks/**/*.tsx", "./benchmarks/tsconfig.json"],
+    "hideGenerator": true,
+    "theme": "./docs/api-template"
   }
 }

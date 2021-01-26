@@ -10,13 +10,7 @@ loadingAnimation.innerHTML = `
   body.is-loading { opacity: 0.75; }
 `;
 
-const isLocalLink = (node: Node): boolean => {
-  let linkNode = node;
-  while (linkNode && linkNode.nodeName !== 'A') {
-    linkNode = linkNode.parentNode as Node;
-  }
-  return linkNode && ((linkNode as HTMLAnchorElement).getAttribute?.('href') ?? '').indexOf('://') === -1;
-};
+const isLocalLink = (node: Node): boolean => ((node as HTMLElement).closest('a')?.href || '').indexOf('://') !== -1;
 
 const isTextInput = (node: Node): node is HTMLInputElement =>
   node.nodeName === 'INPUT' && ['email', 'text', 'password'].includes((node as HTMLInputElement).type);
@@ -84,7 +78,7 @@ const removeUnusedHeaderElements = (from: HTMLHeadElement, to: HTMLHeadElement) 
     .forEach(element => from.removeChild(element));
 };
 
-const transformDom = (mode: 'cache' | 'network') => (newDom: Document) => {
+const transformDom = (mode: 'cache' | 'network', newDom: Document) => {
   performance.mark('morph_dom');
   morphHead(document.head, newDom.head.cloneNode(true) as HTMLHeadElement);
   morphdom(document.body, newDom.body.cloneNode(true), {
@@ -103,12 +97,24 @@ const transformDom = (mode: 'cache' | 'network') => (newDom: Document) => {
   performance.measure('morphing', 'morph_dom');
 };
 
+const setUrl = (url: string, replace: boolean) => {
+  if (url !== window.location.href) {
+    history[replace ? 'replaceState' : 'pushState'](replace ? history.state : null, '', url);
+  }
+};
+
 const restoreScrollPosition = () => {
   const position = window.history.state?.scrollPosition;
   if (position) {
     window.scrollTo(...position);
   } else {
-    window.scrollTo(0, 0);
+    let anchor;
+    const hash = location.hash.slice(1);
+    if (hash && (anchor = document.querySelector(`[name="${hash}"], [id="${hash}"]`))) {
+      anchor.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollTo(0, 0);
+    }
   }
 };
 
@@ -116,12 +122,13 @@ type CacheEntry = { dom: Document; validUntil: number; url: string } | undefined
 
 const cacheMap: Record<string, CacheEntry> = {};
 
-const parseResponse = async (response: Response) => {
+const parseResponse = async (response: Response, request: Request) => {
   performance.mark('parse_response_start');
   const validUntil = new Date(response.headers.get('Date') || 0).getTime() + 1800000;
   const dom = parser.parseFromString(await response.clone().text(), 'text/html');
+  const [, hash] = request.url.split('#');
   performance.measure('Parse response', 'parse_response_start');
-  return { dom, validUntil, url: response.url };
+  return { dom, validUntil, url: response.url + (hash ? '#' + hash : '') };
 };
 
 const cacheResponse = (request: Request, response: Response, parsedResponse: CacheEntry) => {
@@ -144,11 +151,15 @@ const getResponseFromCache = (request: Request): CacheEntry | Promise<CacheEntry
   }
   return cache
     ?.match(request)
-    .then(response => response && parseResponse(response))
+    .then(response => response && parseResponse(response, request))
     .catch(() => undefined);
 };
 
-const handleNetworkResponse = async (request: Request, cacheRace: AbortController): Promise<string | undefined> => {
+const handleNetworkResponse = async (
+  request: Request,
+  cacheRace: AbortController,
+  replace: boolean,
+): Promise<string | undefined> => {
   // We stop loading new images to improve the loading speed for the upcoming request
   document.querySelectorAll('img').forEach((image: HTMLImageElement) => {
     if (!image.complete) {
@@ -170,8 +181,9 @@ const handleNetworkResponse = async (request: Request, cacheRace: AbortControlle
     return undefined;
   }
 
-  const parsed = await parseResponse(response);
-  transformDom('network')(parsed.dom);
+  const parsed = await parseResponse(response, request);
+  setUrl(parsed.url, replace);
+  transformDom('network', parsed.dom);
   // Aborting requests of cached responses will lead to uncaught exceptions
   abortController = null;
   cacheResponse(request, response, parsed);
@@ -186,18 +198,19 @@ const handleNetworkResponse = async (request: Request, cacheRace: AbortControlle
   return response.url;
 };
 
-const updateFromCache = async (request: Request, cacheRace: AbortController) => {
+const updateFromCache = async (request: Request, cacheRace: AbortController, replace: boolean) => {
   performance.mark('update_from_cache_start');
   const parsed = await getResponseFromCache(request);
   if (!parsed || cacheRace.signal.aborted || parsed.validUntil < Date.now()) {
     return;
   }
-  transformDom('cache')(parsed.dom);
+  setUrl(parsed.url, replace);
+  transformDom('cache', parsed.dom);
   performance.measure('Update from cache', 'update_from_cache_start');
   return parsed.url;
 };
 
-const handleTransition = async (targetUrl: string, body?: BodyInit) => {
+const handleTransition = async (targetUrl: string, body?: BodyInit, replace = false) => {
   performance.mark('transition_start');
   abortController?.abort();
   abortController = new AbortController();
@@ -211,8 +224,8 @@ const handleTransition = async (targetUrl: string, body?: BodyInit) => {
     body,
   });
   performance.mark('trigger_requests');
-  const cachedTransition = updateFromCache(request, cacheRace);
-  const networkTransition = handleNetworkResponse(request, cacheRace).catch(error => {
+  const cachedTransition = updateFromCache(request, cacheRace, replace);
+  const networkTransition = handleNetworkResponse(request, cacheRace, replace).catch(error => {
     if (error.name !== 'AbortError') {
       console.error(error, `Unable to resolve "${targetUrl}". Doing hard load instead...`); // eslint-disable-line
       window.location.href = targetUrl;
@@ -237,15 +250,12 @@ export const navigateTo = async (targetUrl: string, body?: BodyInit, target?: st
     return;
   }
   saveScrollPosition();
-  // The final and target URLs can differ due to HTTP redirects.
-  const finalUrl = await handleTransition(targetUrl, body);
-  if (finalUrl) {
-    if (finalUrl !== window.location.href) {
-      window.history[replace ? 'replaceState' : 'pushState'](null, document.title, finalUrl);
-      window.document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: true, cancelable: true }));
-    }
-    restoreScrollPosition();
+  if (targetUrl.startsWith('#')) {
+    setUrl(location.pathname + targetUrl, false);
+  } else if (await handleTransition(targetUrl, body, replace)) {
+    window.document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: true, cancelable: true }));
   }
+  restoreScrollPosition();
 };
 
 const handleClick = (event: MouseEvent) => {
@@ -314,6 +324,10 @@ interface Options {
 }
 
 export default async (options?: Options) => {
+  if ((window as any).__links__) {
+    return;
+  }
+  (window as any).__links__ = true;
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
@@ -328,7 +342,7 @@ export default async (options?: Options) => {
   document.addEventListener('submit', handleSubmit);
   window.addEventListener('message', handleMessage);
   window.onpopstate = async (event: PopStateEvent) => {
-    await handleTransition((event?.target as Window).location.href);
+    await handleTransition((event?.target as Window).location.href, undefined, true);
     restoreScrollPosition();
   };
   // We need to save the scroll position constantly, because we can't access the previous history entry

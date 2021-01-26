@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Getting Started
-slug: getting-started
 ---
 
 ## Installation

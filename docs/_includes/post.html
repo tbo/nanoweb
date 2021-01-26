@@ -1,8 +1,6 @@
 ---
 layout: default
 ---
-{% include topnav.html %}
-
 <main class="wrapper">
   <nav class="side-nav">
     <button id="toggleNavButton">Menu</button>
@@ -22,6 +20,9 @@ layout: default
           <a href="{{site.baseurl}}{{ item.url }}">{{item.data.title}}</a>
         </li>
       {% endfor %}
+      <li>
+        <a href="{{site.baseurl}}/api/modules/template_src.html">API</a>
+      </li>
     </ul>
     <div class="title">Links</div>
     <ul>
@@ -30,6 +31,9 @@ layout: default
           <a href="{{site.baseurl}}{{ item.url }}">{{item.data.title}}</a>
         </li>
       {% endfor %}
+      <li>
+        <a href="{{site.baseurl}}/api/modules/links_src_links.html">API</a>
+      </li>
     </ul>
   </nav>
 
