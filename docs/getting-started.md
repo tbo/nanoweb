@@ -102,4 +102,4 @@ $ node index.js
 ```
 You can access it on [http://localhost:3000/](http://localhost:3000/).
 
-To learn more about templates, see [Writing Templates](./template/writing-templates).
+To learn more about templates, see [Writing Templates](./template/01-writing-templates.html).
