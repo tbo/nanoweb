@@ -32,7 +32,7 @@ export default [
     },
     plugins: [
       typescript({ include: './src/**/*.ts', declaration: false, sourceMap: true, target: 'es5' }),
-      // terser({ output: { comments: false } }),
+      terser({ output: { comments: false } }),
       nodeResolve(),
     ],
   },
