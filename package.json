@@ -9,7 +9,8 @@
     "docs": "rm -fr site && npm run docs:site && npm run docs:api",
     "docs:site": "eleventy --config=./docs/.eleventy.js",
     "benchmark": "cd benchmarks && npm start",
-    "docs:api": "typedoc --tsconfig ./docs/tsconfig.json"
+    "docs:api": "typedoc --tsconfig ./docs/tsconfig.json",
+    "docs:publish": "git subtree push --prefix site origin gh-pages"
   },
   "directories": {
     "doc": "docs"
