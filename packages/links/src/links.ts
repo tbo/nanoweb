@@ -83,7 +83,7 @@ const transformDom = (mode: 'cache' | 'network', newDom: Document) => {
   performance.mark('morph_dom');
   morphHead(document.head, newDom.head.cloneNode(true) as HTMLHeadElement);
   morphdom(document.body, newDom.body.cloneNode(true), {
-    getNodeKey: node => (node as HTMLElement).id,
+    getNodeKey: node => (node as HTMLElement).id || (node.nodeName === 'SCRIPT' && (node as HTMLScriptElement).src),
     onBeforeElUpdated: mode === 'network' ? shouldUpdateFromNetwork : shouldUpdateFromCache,
     onNodeAdded: node => {
       if (node.nodeName === 'SCRIPT') {

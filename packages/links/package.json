@@ -1,6 +1,6 @@
 {
   "name": "@nanoweb/links",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "dist/links.js",
   "source": "src/links.ts",
