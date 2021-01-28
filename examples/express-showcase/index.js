@@ -6,7 +6,7 @@ const LiveSearchExample = require('./pages/search');
 
 const Header = () => html`
   <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">Nanoweb Demo</a>
+    <a class="navbar-brand" href="/">nanoweb Demo</a>
     Header cached at: ${new Date().toLocaleTimeString()}
   </nav>
   <nav class="navbar navbar-light bg-light">
@@ -41,7 +41,7 @@ const addWebComponentScripts = (text, webComponents) => {
 
 const render = handler => async (req, res) =>
   res.send(
-    await renderToString(Page('Nanoweb Demo', await handler(req, res)), {
+    await renderToString(Page('nanoweb Demo', await handler(req, res)), {
       transformResult: addWebComponentScripts,
     }),
   );

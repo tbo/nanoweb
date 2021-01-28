@@ -13,17 +13,17 @@ This section introduces the main features and concepts in `@nanoweb/template`.
 The simplest thing to do in `@nanoweb/template` is to render some static HTML.
 
 ```js
-import {html, renderToString} from '@nanoweb/template';
+import { html, renderToString } from '@nanoweb/template';
 
 // Declare a template
 const myTemplate = html`<div>Hello World</div>`;
 
 // Render the template
 renderToString(myTemplate)
-  .then(text => console.log(text)); // => "<div>Hello World</div>"
+  .then((text) => console.log(text)); // => "<div>Hello World</div>"
 ```
 
-The template is a [_tagged template literal_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals). The template itself looks like a regular JavaScript string, but enclosed in backticks (`` ` ``) instead of quotes. The browser passes the string to `@nanoweb/template`'s `html` tag function.
+The template is a [_tagged template literal_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals). The template itself looks like a regular JavaScript string, but enclosed in backticks (`` ` ``) instead of quotes. The string is passed to `@nanoweb/template`'s `html` tag function.
 
 The `html` tag function returns a `Template`—a lightweight object that represents the template to be rendered.
 
@@ -40,7 +40,7 @@ const aTemplate = html`<h1>${title}</h1>`;
 To make your template dynamic, you can create a _template function_. Call the template function any time your data changes.
 
 ```js
-import {html, renderToString} from '@nanoweb/template';
+import { html, renderToString } from '@nanoweb/template';
 
 // Define a template function
 const myTemplate = (name) => html`<div>Hello ${name}</div>`;
@@ -115,9 +115,9 @@ Ternary expressions are a great way to add inline conditionals:
 
 ```js
 html`
-  ${user.isloggedIn
-      ? html`Welcome ${user.name}`
-      : html`Please log in`
+  ${user.isLoggedIn
+    ? html`Welcome ${user.name}`
+    : html`Please log in`
   }
 `;
 ```
@@ -143,8 +143,7 @@ html`
 
 #### Guard statements
 
-You can add guard statements to display certain values if certain conditions are met or nothing if not. Falsy values are
-ignored by `html`.
+You can add guard statements to display certain values if certain conditions are met or nothing if not. Falsy values are ignored by `html`.
 ```js
 html`Welcome ${user.isLoggedIn && user.name}`
 ```

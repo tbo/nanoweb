@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Nanoweb
+title: nanoweb
 ---
 
 ## What is nanoweb?
@@ -23,7 +23,7 @@ This sentiment is shared by [more](https://macwright.com/2020/05/10/spa-fatigue.
 nanoweb consists of [two packages](https://www.npmjs.com/search?q=%40nanoweb) which can be used together or separately in combination with other frameworks.
 
 ## Links
-The [nanoweb links package](https://www.npmjs.com/package/@nanoweb/links) makes navigating your web application faster. You get the performance benefits of a single-page application without the added complexity of a client-side JavaScript framework. Use HTML to render your views on the server side and link to pages as usual. When you follow a link, `@nanoweb/links` automatically fetches the page, merges it into the current page, all without incurring the cost of a full page load. Besides performance optimizations and loading animations the page interaction will be indistinguishable from a static page.
+The [nanoweb links package](https://www.npmjs.com/package/@nanoweb/links) makes navigating your web application faster. You get the performance benefits of a single page application without the added complexity of a client-side JavaScript framework. Use HTML to render your views on the server side and link to pages as usual. When you follow a link, `@nanoweb/links` automatically fetches the page, merges it into the current page, all without incurring the cost of a full page load. Besides performance optimizations and loading animations the page interaction will be indistinguishable from a static page.
 
 The real benefit of this solution kicks in once we need to keep state on the client. It is not required to repeatedly rehydrate the frontend anymore. We can keep the UI state always in memory and avoid flashing content. It shares some resemblance with [Turbolinks](https://github.com/turbolinks/turbolinks). But instead of simply swapping `body` content, we merge it with [morphdom](https://github.com/patrick-steele-idem/morphdom) to avoid loosing form state.
 
@@ -52,7 +52,7 @@ const myTemplate = (userId) => html`
 `;
 ```
 
-`html` returns a `Template`, which can be transformed into string by passing it to `renderToString`.
+`html` returns a `Template`, which can be transformed into a string by passing it to `renderToString`.
 ```js
 const result = myTemplate({title: 'Hello', body: 'nanoweb is cool'});
 const text = await renderToString(result);

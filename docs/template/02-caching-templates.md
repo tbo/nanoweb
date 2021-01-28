@@ -73,7 +73,7 @@ let counter = 0;
 const template = (input) => html`Input: ${input}, Counter: ${++counter}`;
 
 const cacheKey = (input) => String(input);
-const cachedTemplate = cache(template, {cackeKey});
+const cachedTemplate = cache(template, { cackeKey });
 
 renderToString(cachedTemplate('A'))
   .then(text => console.log(text)); // => "Input: A, Counter: 1";

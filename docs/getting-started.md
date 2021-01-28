@@ -24,21 +24,21 @@ Some editors (e.g. CodeSandbox) require a `/*html*/` comment before the template
 
 </div>
 
-The example is also available on <a href="https://github.com/tbo/nanoweb/tree/master/examples/express-showcase" target="_blank">Github</a>.
+The example is also available on <a href="https://github.com/tbo/nanoweb/tree/master/examples/express-showcase" target="_blank">GitHub</a>.
 
 ## Importing
 
 `@nanoweb/template` and `@nanoweb/links` run in different environments and therefore support different import options.
 
 ### Template
-NodeJs supports importing via [ECMAScript modules](https://nodejs.org/api/esm.html):
+Node.js supports importing via [ECMAScript modules](https://nodejs.org/api/esm.html):
 ```js
-import {html, renderToString} from '@nanoweb/template';
+import { html, renderToString } from '@nanoweb/template';
 ```
-... or [CommonJs](https://nodejs.org/docs/latest/api/modules.html):
+... or [CommonJS](https://nodejs.org/docs/latest/api/modules.html):
 
 ```js
-const {html, renderToString} = require('@nanoweb/template');
+const { html, renderToString } = require('@nanoweb/template');
 ```
 Choosing a format is a matter of personal preference.
 

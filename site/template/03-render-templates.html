@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <title>Nanoweb  - Render templates</title>
+  <title>nanoweb  - Render templates</title>
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/prism-okaidia-a11y.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-  <meta name="description" content="Nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs">
+  <meta name="description" content="nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs">
   <meta name="keywords" content="HTML, SPA, JavaScript, Web Components, Template String Literals">
 </head>
 <body>
@@ -76,7 +76,7 @@
     <nav class="toc">
                 <ol>
                     
-                    <li><a href="#render-to-string">Render to String</a>
+                    <li><a href="#render-to-string">Render to string</a>
             
                 <ol>
                     
@@ -88,7 +88,7 @@
                 </ol>
             		</li>
 
-                    <li><a href="#render-to-stream">Render to Stream</a>
+                    <li><a href="#render-to-stream">Render to stream</a>
             
                 <ol>
                     
@@ -102,8 +102,8 @@
                 </ol>
             </nav>
 
-    <p><code>@nanoweb/template</code> supports to render modes: string and stream rendering. Each one has its advantages and disadvantages, but rendering to strings is in general easier to use and slightly more resource efficient, whereas rendering to streams can drastically reduce the <em>time to first byte</em> (<a href="https://en.wikipedia.org/wiki/Time_to_first_byte">TTFB</a>).</p>
-<h2 id="render-to-string">Render to String</h2>
+    <p><code>@nanoweb/template</code> supports two render modes: string and stream rendering. Each one has its advantages and disadvantages, but rendering to strings is in general easier to use and slightly more resource efficient, whereas rendering to streams can drastically reduce the <em>time to first byte</em> (<a href="https://en.wikipedia.org/wiki/Time_to_first_byte">TTFB</a>).</p>
+<h2 id="render-to-string">Render to string</h2>
 <p><code>renderToString</code> returns a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> with a string value. Check out the <a href="/api/modules/template_src.html#rendertostring">API documentation</a> to check out all options.</p>
 <h3 id="usage">Usage</h3>
 <pre class="language-js"><code class="language-js"><span class="token function">renderToString</span><span class="token punctuation">(</span>html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">Hello, World!</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token parameter">text</span> <span class="token operator">=></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
@@ -113,8 +113,8 @@
 <pre class="language-js"><code class="language-js"><span class="token function">express</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br>  <span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span><br>    res<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token keyword">await</span> <span class="token function">renderToString</span><span class="token punctuation">(</span>html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">Hello, World!</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token punctuation">}</span><span class="token punctuation">)</span><br>  <span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p><a href="https://www.fastify.io/">Fastify</a> natively handles promises:</p>
 <pre class="language-js"><code class="language-js"><span class="token function">fastify</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br>  <span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token function">renderToString</span><span class="token punctuation">(</span>html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">Hello, World!</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>  <span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<h2 id="render-to-stream">Render to Stream</h2>
-<p><code>renderToStream</code> returns a <a href="https://nodejs.org/api/stream.html#stream_readable_streams">Readable</a>, which can be directly consumed by most frameworks (e.g. <a href="https://expressjs.com/">Express</a> or <a href="https://www.fastify.io/">Fastify</a>). When using streams we need to pay special attention to error handling and header manipulation. Due to the nature of Streams some parts of the response can already be sent off to client before all templates have been processed. Some of these issues can circumvented by using HTTP <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Trailer">Trailers</a> or <a href="https://en.wikipedia.org/wiki/URL_redirection#HTTP_status_codes_3xx">Redirects</a>. Check out the <a href="/api/modules/template_src.html#rendertostream">API documentation</a> to check out all options.</p>
+<h2 id="render-to-stream">Render to stream</h2>
+<p><code>renderToStream</code> returns a <a href="https://nodejs.org/api/stream.html#stream_readable_streams">Readable</a>, which can be directly consumed by most frameworks (e.g. <a href="https://expressjs.com/">Express</a> or <a href="https://www.fastify.io/">Fastify</a>). When using streams we need to pay special attention to error handling and header manipulation. Due to the nature of streams some parts of the response can already be sent off to the client before all templates have been processed. Some of these issues can be circumvented by using HTTP <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Trailer">Trailers</a> or <a href="https://en.wikipedia.org/wiki/URL_redirection#HTTP_status_codes_3xx">Redirects</a>. Check out the <a href="/api/modules/template_src.html#rendertostream">API documentation</a> to check out all options.</p>
 <h3 id="usage-1">Usage</h3>
 <p>This will print the rendered result in chunks:</p>
 <pre class="language-js"><code class="language-js"><span class="token function">renderToStream</span><span class="token punctuation">(</span>html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">Hello, World!</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">pipe</span><span class="token punctuation">(</span>process<span class="token punctuation">.</span>stdout<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
