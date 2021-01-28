@@ -3,13 +3,13 @@ title: Recipes
 slug: recipes
 ---
 
-`@nanoweb/links` tries to be indiscernible in its functionality from Multi Page Applications as possible. Yet there are some instances that require a special "touch" to provide the best UX possible.
+`@nanoweb/links` tries to be indiscernible in its functionality from multi page applications as possible. Yet there are some instances that require a special "touch" to provide the best UX possible.
 
 ## Keep scroll position despite page transition
 
-Static web pages reset the scroll position on every page navigation. This can be quite disruptive if only very change occurred. You can opt-out of this default behavior by annotating links with a `replace` data attribute:
+Static web pages reset the scroll position on every page navigation. This can be quite disruptive if only very little change occurred. You can opt-out of this default behavior by annotating links with a `replace` data attribute:
 ```html
-<a href="..." data-replace >...</a>
+<a href="..." data-replace>...</a>
 ```
 
 ## Preloading
@@ -60,7 +60,7 @@ To improve the perceived performance of page navigations `@nanoweb/links` applie
 
 ```html
 <div>
-    Items in basket: <span data-lazy>6</span>
+  Items in basket: <span data-lazy>6</span>
 </div>
 ```
 
@@ -88,15 +88,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
 ## Handle conflicting revisions
 
-User sessions can be surprisingly long. This is usually not a problem for MPAs, because all resources are being reevaluated on every request. SPAs however have to handle updated APIs and bundles. `@nanoweb/links` is not directly affected by this, because it can handle any form of HTML. Yet your frontend components might be impacted. You can handle these scenarios by adding an revision ID for every release.
+User sessions can be surprisingly long. This is usually not a problem for MPAs, because all resources are being reevaluated on every request. SPAs however have to handle updated APIs and bundles. `@nanoweb/links` is not directly affected by this, because it can handle any form of HTML. Yet your frontend components might be impacted. You can handle these scenarios by adding a revision ID for every release.
 
 ```js
 import links from './links';
 
 window.addEventListener('DOMContentLoaded', () => {
-  links({ revision: '4.2'});
+  links({ revision: '4.2' });
 });
 ```
 
-`@nanoweb/links` will then check the `X-REVSISION` header on every response. A fullpage load is triggered, if both values are defined (links configuration and revision header) but differ.
+`@nanoweb/links` will then check the `X-REVISION` header on every response. A full page load is triggered, if both values are defined (links configuration and revision header) but differ.
 

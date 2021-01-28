@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <title>Nanoweb  - Getting Started</title>
+  <title>nanoweb  - Getting Started</title>
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/prism-okaidia-a11y.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-  <meta name="description" content="Nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs">
+  <meta name="description" content="nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs">
   <meta name="keywords" content="HTML, SPA, JavaScript, Web Components, Template String Literals">
 </head>
 <body>
@@ -111,14 +111,14 @@
 <div class="alert alert-info">
 <p>Some editors (e.g. CodeSandbox) require a <code>/*html*/</code> comment before the template literal for proper syntax highlighting. You can improve the experience with the plugins outlined under <a href="./template/08-tools.html">Tools</a>.</p>
 </div>
-<p>The example is also available on <a href="https://github.com/tbo/nanoweb/tree/master/examples/express-showcase" target="_blank">Github</a>.</p>
+<p>The example is also available on <a href="https://github.com/tbo/nanoweb/tree/master/examples/express-showcase" target="_blank">GitHub</a>.</p>
 <h2 id="importing">Importing</h2>
 <p><code>@nanoweb/template</code> and <code>@nanoweb/links</code> run in different environments and therefore support different import options.</p>
 <h3 id="template">Template</h3>
-<p>NodeJs supports importing via <a href="https://nodejs.org/api/esm.html">ECMAScript modules</a>:</p>
-<pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span>html<span class="token punctuation">,</span> renderToString<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@nanoweb/template'</span><span class="token punctuation">;</span></code></pre>
-<p>... or <a href="https://nodejs.org/docs/latest/api/modules.html">CommonJs</a>:</p>
-<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token punctuation">{</span>html<span class="token punctuation">,</span> renderToString<span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'@nanoweb/template'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Node.js supports importing via <a href="https://nodejs.org/api/esm.html">ECMAScript modules</a>:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> html<span class="token punctuation">,</span> renderToString <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@nanoweb/template'</span><span class="token punctuation">;</span></code></pre>
+<p>... or <a href="https://nodejs.org/docs/latest/api/modules.html">CommonJS</a>:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token punctuation">{</span> html<span class="token punctuation">,</span> renderToString <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'@nanoweb/template'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>Choosing a format is a matter of personal preference.</p>
 <h3 id="links">Links</h3>
 <p>Using <code>@nanoweb/links</code> can be as simple as adding a script tag to a page:</p>
