@@ -1,7 +1,7 @@
 {
   "name": "@nanoweb/template",
-  "version": "0.0.6",
-  "description": "",
+  "version": "0.0.7",
+  "description": "nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/tbo/nanoweb/issues"
   },
-  "homepage": "https://github.com/tbo/nanoweb#readme",
+  "homepage": "https://nanoweb.js.org/",
   "dependencies": {
     "node-cache": "^5.1.2"
   }

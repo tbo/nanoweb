@@ -1,7 +1,7 @@
 {
   "name": "@nanoweb/links",
-  "version": "0.0.11",
-  "description": "",
+  "version": "0.0.12",
+  "description": "nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs.",
   "main": "dist/links.js",
   "source": "src/links.ts",
   "types": "dist/links.d.ts",
@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/tbo/nanoweb/issues"
   },
-  "homepage": "https://github.com/tbo/nanoweb#readme",
+  "homepage": "https://nanoweb.js.org/",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^11.0.1",
     "@rollup/plugin-typescript": "^8.1.0",
