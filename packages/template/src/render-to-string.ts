@@ -5,8 +5,8 @@ export const resolve = async (component: Template | Promise<Template>, webCompon
   webComponents.push(...list.webComponents);
   let buffer = '';
   for (const item of list) {
-    if (item !== undefined) {
-      const resolvedItem = await item;
+    const resolvedItem = await item;
+    if (resolvedItem || resolvedItem === 0) {
       buffer += resolvedItem instanceof Template ? await resolve(resolvedItem, webComponents) : resolvedItem;
     }
   }

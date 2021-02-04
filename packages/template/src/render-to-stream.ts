@@ -9,7 +9,7 @@ const resolve = async (stream: PassThrough, component: Template | Promise<Templa
       const resolvedItem = await item;
       if (resolvedItem instanceof Template) {
         await resolve(stream, resolvedItem, webComponents);
-      } else {
+      } else if (resolvedItem || resolvedItem === 0) {
         stream.write(resolvedItem);
       }
     }

@@ -48,12 +48,24 @@ describe('Template tag', () => {
     await matchSnapshot(() => html`unsafe: ${unsafeHtml(undefined)}`);
   });
 
+  test('Render zero', async () => {
+    await matchSnapshot(() => html`zero: ${0}`);
+    await matchSnapshot(() => html`zero: ${Promise.resolve(0)}`);
+  });
+
   test('Do not render `null`', async () => {
     await matchSnapshot(() => html`null: ${null}`);
+    await matchSnapshot(() => html`null: ${Promise.resolve(null)}`);
   });
 
   test('Do not render `false`', async () => {
     await matchSnapshot(() => html`false: ${false}`);
+    await matchSnapshot(() => html`false: ${Promise.resolve(false)}`);
+  });
+
+  test('Do not render `undefined`', async () => {
+    await matchSnapshot(() => html`undefined: ${undefined}`);
+    await matchSnapshot(() => html`undefined: ${Promise.resolve(undefined)}`);
   });
 
   test('Render cached static strings', async () => {

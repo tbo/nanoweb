@@ -2,7 +2,15 @@
 
 exports[`Template tag Do not render \`false\` 1`] = `"false: "`;
 
+exports[`Template tag Do not render \`false\` 2`] = `"false: "`;
+
 exports[`Template tag Do not render \`null\` 1`] = `"null: "`;
+
+exports[`Template tag Do not render \`null\` 2`] = `"null: "`;
+
+exports[`Template tag Do not render \`undefined\` 1`] = `"undefined: "`;
+
+exports[`Template tag Do not render \`undefined\` 2`] = `"undefined: "`;
 
 exports[`Template tag Render async template tag  1`] = `"async test"`;
 
@@ -29,3 +37,7 @@ exports[`Template tag Render simple template tag with number substitution 1`] = 
 exports[`Template tag Render unsafe values 1`] = `"unsafe: <b>generated html</b>"`;
 
 exports[`Template tag Render unsafe values 2`] = `"unsafe: "`;
+
+exports[`Template tag Render zero 1`] = `"zero: 0"`;
+
+exports[`Template tag Render zero 2`] = `"zero: 0"`;
