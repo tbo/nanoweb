@@ -57,7 +57,7 @@ fastify()
   .get('/', (request, reply) => {
     reply
       .type('text/html')
-      .send(renderToStream(html`Hello, World!`);
+      .send(renderToStream(html`Hello, World!`));
   })
   .listen(3000);
 ```
