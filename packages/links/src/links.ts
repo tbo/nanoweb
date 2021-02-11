@@ -2,7 +2,6 @@ import morphdom from 'morphdom';
 const { performance } = window;
 
 let revision: string;
-let cache: Cache | undefined;
 
 const loadingAnimation = document.createElement('style');
 loadingAnimation.innerHTML = `
@@ -48,10 +47,6 @@ const shouldUpdateFromCache = shouldUpdate(true);
 let abortController: AbortController | null = null;
 
 const parser = new DOMParser();
-
-const getFirstValidResponse = <T>(requests: Promise<T | void>[]): Promise<T> => {
-  return new Promise(resolve => requests.forEach(request => request.then(result => result && resolve(result))));
-};
 
 const IMMUTABLE_TAGS = ['STYLE', 'SCRIPT', 'LINK'];
 
@@ -135,25 +130,17 @@ const parseResponse = async (response: Response, request: Request) => {
 const cacheResponse = (request: Request, response: Response, parsedResponse: CacheEntry) => {
   performance.mark('cache_response_start');
   if (response.status < 400) {
-    cache?.put(response.url, response);
     cacheMap[response.url] = parsedResponse;
     if (response.status === 301) {
-      cache?.put(request.url, response);
       cacheMap[request.url] = parsedResponse;
     }
   }
   performance.measure('Cache response', 'cache_response_start');
 };
 
-const getResponseFromCache = (request: Request): CacheEntry | Promise<CacheEntry> => {
+const getResponseFromCache = (request: Request): CacheEntry => {
   const hit = cacheMap[request.url];
-  if (hit) {
-    return { ...hit, dom: hit.dom.cloneNode(true) as Document };
-  }
-  return cache
-    ?.match(request)
-    .then(response => response && parseResponse(response, request))
-    .catch(() => undefined);
+  return hit ? { ...hit, dom: hit.dom.cloneNode(true) as Document } : undefined;
 };
 
 const handleNetworkResponse = async (
@@ -199,9 +186,9 @@ const handleNetworkResponse = async (
   return response.url;
 };
 
-const updateFromCache = async (request: Request, cacheRace: AbortController, replace: boolean) => {
+const updateFromCache = (request: Request, cacheRace: AbortController, replace: boolean) => {
   performance.mark('update_from_cache_start');
-  const parsed = await getResponseFromCache(request);
+  const parsed = getResponseFromCache(request);
   if (!parsed || cacheRace.signal.aborted || parsed.validUntil < Date.now()) {
     return;
   }
@@ -232,7 +219,7 @@ const handleTransition = async (targetUrl: string, body?: BodyInit, replace = fa
       window.location.href = targetUrl;
     }
   });
-  const result = await getFirstValidResponse([cachedTransition, networkTransition]);
+  const result = cachedTransition || (await networkTransition);
   performance.measure('Transition', 'transition_start');
   return result;
 };
@@ -324,7 +311,7 @@ interface Options {
   defaultLoadingAnimation?: boolean;
 }
 
-export default async (options?: Options) => {
+export default (options?: Options) => {
   if ((window as any).__links__) {
     return;
   }
@@ -335,7 +322,6 @@ export default async (options?: Options) => {
 
   if (options?.revision) {
     revision = options?.revision;
-    await window.caches?.open(`hybrid-${revision}`).then(c => (cache = c));
   }
   cacheInitialPageLoad();
 
