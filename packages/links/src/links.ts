@@ -212,7 +212,8 @@ const handleTransition = async (targetUrl: string, body?: BodyInit, replace = fa
     body,
   });
   performance.mark('trigger_requests');
-  const cachedTransition = updateFromCache(request, cacheRace, replace);
+  const cachedTransition =
+    request.method.toUpperCase() === 'GET' ? updateFromCache(request, cacheRace, replace) : undefined;
   const networkTransition = handleNetworkResponse(request, cacheRace, replace).catch(error => {
     if (error.name !== 'AbortError') {
       console.error(error, `Unable to resolve "${targetUrl}". Doing hard load instead...`); // eslint-disable-line
