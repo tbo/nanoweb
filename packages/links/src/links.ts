@@ -263,6 +263,10 @@ const handleClick = (event: MouseEvent) => {
 const handleSubmit = (event: Event) => {
   event.preventDefault();
   const form = event.target as HTMLFormElement;
+  const action = form.getAttribute('action');
+  if (!action) {
+    return;
+  }
   const data = new FormData(form);
   const target = form.getAttribute('target');
   const { activeElement } = document;
@@ -279,10 +283,10 @@ const handleSubmit = (event: Event) => {
     data.append(activeElement.getAttribute('name')!, activeElement.getAttribute('value')!);
   }
   if (form.method === 'post') {
-    navigateTo(form.action, data, target);
+    navigateTo(action, data, target);
   } else {
     const query = new URLSearchParams(data as any).toString();
-    navigateTo(form.action + (query ? '?' + query : ''), undefined, target);
+    navigateTo(action + (query ? '?' + query : ''), undefined, target);
   }
 };
 
