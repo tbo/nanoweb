@@ -1,4 +1,4 @@
-const repeatedWhitespace = /\s{2,}/g;
+const repeatedWhitespace = /\s{1,}/g;
 const whitespace = /\r\n|\n|\r|(\s{1,}(?=<))/g;
 
 const cache = new Map();
@@ -55,7 +55,7 @@ const resolve = (element: TemplateElement): any => {
 export const html = (literalSections: TemplateStringsArray, ...expressions: TemplateElement[]) => {
   let [raw, webComponents] = cache.get(literalSections) || [undefined, undefined];
   if (raw === undefined) {
-    raw = literalSections.raw.map((item: string) => item.replace(whitespace, '').replace(repeatedWhitespace, ' '));
+    raw = literalSections.raw.map((item: string) => item.replace(whitespace, ' ').replace(repeatedWhitespace, ' '));
     webComponents = Array.from(
       new Set(Array.from(raw.join().matchAll(WEB_COMPONENT_PATTERN)).map((hit: any) => hit[1])),
     );

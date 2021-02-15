@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render to string with web components and transformer 1`] = `"<html><head></head><body><x-button> content</x-button><script src=\\"/assets/x-button.js\\"></script></body></html> "`;
+exports[`Render to string with web components and transformer 1`] = `" <html> <head></head> <body> <x-button> content </x-button> <script src=\\"/assets/x-button.js\\"></script></body> </html> "`;
 
-exports[`Render to string with web components and transformer 2`] = `"<html><head></head><body> <x-button> content</x-button> <script src=\\"/assets/x-button.js\\"></script></body></html> "`;
+exports[`Render to string with web components and transformer 2`] = `" <html> <head></head> <body>  <x-button> content </x-button>  <script src=\\"/assets/x-button.js\\"></script></body> </html> "`;
 
-exports[`Render to string with web components and transformer 3`] = `"<html><head></head><body> <x-button> content</x-button> <script src=\\"/assets/x-button.js\\"></script></body></html> "`;
+exports[`Render to string with web components and transformer 3`] = `" <html> <head></head> <body>  <x-button> content </x-button>  <script src=\\"/assets/x-button.js\\"></script></body> </html> "`;
 
-exports[`Render to string with web components and transformer 4`] = `"<html><head></head><body> <x-button> content</x-button> <script src=\\"/assets/x-button.js\\"></script></body></html> "`;
+exports[`Render to string with web components and transformer 4`] = `" <html> <head></head> <body>  <x-button> content </x-button>  <script src=\\"/assets/x-button.js\\"></script></body> </html> "`;
 
-exports[`Render to string with web components and transformer 5`] = `"<html><head></head><body> <x-button> content</x-button> <script src=\\"/assets/x-button.js\\"></script></body></html> "`;
+exports[`Render to string with web components and transformer 5`] = `" <html> <head></head> <body>  <x-button> content </x-button>  <script src=\\"/assets/x-button.js\\"></script></body> </html> "`;
 
-exports[`Render to string with web components, but without options 1`] = `"<html><head></head><body><x-button> content</x-button></body></html> "`;
+exports[`Render to string with web components, but without options 1`] = `" <html> <head></head> <body> <x-button> content </x-button> </body> </html> "`;
 
-exports[`Render to string without options 1`] = `"<html><head></head><body> content</body></html> "`;
+exports[`Render to string without options 1`] = `" <html> <head></head> <body> content </body> </html> "`;
