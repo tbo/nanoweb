@@ -32,7 +32,7 @@ const shouldUpdate = (isCacheRequest: boolean) => (from: Node, to: Node) => {
       isTextInput(from) &&
       isTextInput(to) &&
       from.value !== from.getAttribute('value')) ||
-    (isCacheRequest && (from as any).getAttribute('data-lazy') !== null)
+    (isCacheRequest && (to as any).getAttribute('data-lazy') !== null)
   ) {
     return false;
   } else if (from.nodeName === 'SCRIPT' && to.nodeName === 'SCRIPT' && (to as HTMLScriptElement).innerText) {
