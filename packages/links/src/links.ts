@@ -94,7 +94,9 @@ const transformDom = (mode: 'cache' | 'network', newDom: Document) => {
 };
 
 const setUrl = (url: string, replace: boolean) => {
-  if (url !== window.location.href) {
+  const [currentUrl, currentHash] = window.location.href.split('#');
+  const [newUrl, newHash] = url.split('#');
+  if (newUrl !== currentUrl || ![currentHash, undefined].includes(newHash)) {
     history[replace ? 'replaceState' : 'pushState'](replace ? history.state : null, '', url);
   }
 };
