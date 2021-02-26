@@ -1,7 +1,22 @@
 import morphdom from 'morphdom';
 const { performance } = window;
 
+const historyMock = {
+  state: null,
+  pushState(newState: any) {
+    this.entries.push(this.state);
+    this.state = newState;
+  },
+  replaceState(newState: any) {
+    this.state = newState;
+  },
+  entries: [] as any[],
+};
+
+type Root = Document | ShadowRoot;
 let revision: string;
+let rootElement: Root;
+let h: History | typeof historyMock = history;
 
 const loadingAnimation = document.createElement('style');
 loadingAnimation.innerHTML = `
@@ -74,10 +89,14 @@ const removeUnusedHeaderElements = (from: HTMLHeadElement, to: HTMLHeadElement) 
     .forEach(element => from.removeChild(element));
 };
 
-const transformDom = (mode: 'cache' | 'network', newDom: Document) => {
+const transformDom = (mode: 'cache' | 'network', newDom: Root) => {
   performance.mark('morph_dom');
-  morphHead(document.head, newDom.head.cloneNode(true) as HTMLHeadElement);
-  morphdom(document.body, newDom.body.cloneNode(true), {
+  if (rootElement === document) {
+    morphHead(rootElement.head, (newDom as Document).head.cloneNode(true) as HTMLHeadElement);
+  }
+
+  const body = 'body' in rootElement ? rootElement.body : rootElement;
+  morphdom(body, ('body' in newDom ? newDom.body : newDom).cloneNode(true), {
     getNodeKey: node => (node as HTMLElement).id || (node.nodeName === 'SCRIPT' && (node as HTMLScriptElement).src),
     onBeforeElUpdated: mode === 'network' ? shouldUpdateFromNetwork : shouldUpdateFromCache,
     onNodeAdded: node => {
@@ -87,8 +106,8 @@ const transformDom = (mode: 'cache' | 'network', newDom: Document) => {
       return node;
     },
   });
-  if (mode === 'network') {
-    removeUnusedHeaderElements(document.head, newDom.head);
+  if (rootElement === document && mode === 'network') {
+    removeUnusedHeaderElements(document.head, (newDom as Document).head);
   }
   performance.measure('morphing', 'morph_dom');
 };
@@ -97,26 +116,26 @@ const setUrl = (url: string, replace: boolean) => {
   const [currentUrl, currentHash] = window.location.href.split('#');
   const [newUrl, newHash] = url.split('#');
   if (newUrl !== currentUrl || ![currentHash, undefined].includes(newHash)) {
-    history[replace ? 'replaceState' : 'pushState'](replace ? history.state : null, '', url);
+    h[replace ? 'replaceState' : 'pushState'](replace ? h.state : null, '', url);
   }
 };
 
 const restoreScrollPosition = () => {
-  const position = window.history.state?.scrollPosition;
+  const position = h.state?.scrollPosition;
   if (position) {
     window.scrollTo(...position);
   } else {
     let anchor;
     const hash = location.hash.slice(1);
-    if (hash && (anchor = document.querySelector(`[name="${hash}"], [id="${hash}"]`))) {
-      anchor.scrollIntoView({ behavior: 'smooth' });
+    if (hash && (anchor = (rootElement as any).querySelector(`[name="${hash}"], [id="${hash}"]`))) {
+      anchor?.scrollIntoView({ behavior: 'smooth' });
     } else {
       window.scrollTo(0, 0);
     }
   }
 };
 
-type CacheEntry = { dom: Document; validUntil: number; url: string } | undefined;
+type CacheEntry = { dom: Root; validUntil: number; url: string } | undefined;
 
 const cacheMap: Record<string, CacheEntry> = {};
 
@@ -151,7 +170,7 @@ const handleNetworkResponse = async (
   replace: boolean,
 ): Promise<string | undefined> => {
   // We stop loading new images to improve the loading speed for the upcoming request
-  document.querySelectorAll('img').forEach((image: HTMLImageElement) => {
+  rootElement.querySelectorAll('img').forEach((image: HTMLImageElement) => {
     if (!image.complete) {
       image.style.visibility = 'hidden';
       image.setAttribute('src', '');
@@ -227,8 +246,7 @@ const handleTransition = async (targetUrl: string, body?: BodyInit, replace = fa
   return result;
 };
 
-const saveScrollPosition = () =>
-  window.history.replaceState({ scrollPosition: [window.scrollX, window.scrollY] }, document.title);
+const saveScrollPosition = () => h.replaceState({ scrollPosition: [window.scrollX, window.scrollY] }, document.title);
 
 /**
  * Triggers a page transition programmatically
@@ -249,7 +267,7 @@ export const navigateTo = async (targetUrl: string, body?: BodyInit, target?: st
   restoreScrollPosition();
 };
 
-const handleClick = (event: MouseEvent) => {
+const handleClick = (event: Event) => {
   const element = (event!.target! as HTMLElement).closest('a');
   if (element && isLocalLink(element)) {
     event.preventDefault();
@@ -271,7 +289,7 @@ const handleSubmit = (event: Event) => {
   }
   const data = new FormData(form);
   const target = form.getAttribute('target');
-  const { activeElement } = document;
+  const { activeElement } = rootElement;
   // The submitter event property is not yet available in all browsers so we have to rely
   // on `activeElement`
   if (
@@ -315,6 +333,8 @@ const cacheInitialPageLoad = () => {
 
 interface Options {
   revision?: string;
+  element?: ShadowRoot;
+  useHistory?: boolean;
   defaultLoadingAnimation?: boolean;
 }
 
@@ -323,8 +343,12 @@ export default (options?: Options) => {
     return;
   }
   (window as any).__links__ = true;
-  if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual';
+  rootElement = options?.element || document;
+  if (options?.useHistory === false) {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    h = historyMock;
   }
 
   if (options?.revision) {
@@ -332,8 +356,8 @@ export default (options?: Options) => {
   }
   cacheInitialPageLoad();
 
-  document.addEventListener('click', handleClick);
-  document.addEventListener('submit', handleSubmit);
+  rootElement.addEventListener('click', handleClick);
+  rootElement.addEventListener('submit', handleSubmit);
   window.addEventListener('message', handleMessage);
   window.onpopstate = async (event: PopStateEvent) => {
     await handleTransition((event?.target as Window).location.href, undefined, true);
