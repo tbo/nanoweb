@@ -1,4 +1,5 @@
 import { Cache } from 'https://deno.land/x/local_cache@1.0/mod.ts';
+import { setImmediate } from 'https://deno.land/std@0.102.0/node/timers.ts';
 import { Template } from './html.ts';
 import { resolve } from './render-to-string.ts';
 
