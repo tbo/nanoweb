@@ -3,6 +3,7 @@ import { Readable, Stream } from 'stream';
 import jsxRev1Benchmark from './jsx-rev1';
 import jsxRev2Benchmark from './jsx-rev2';
 import reactBenchmark from './react';
+import preactBenchmark from './preact';
 import simpleTemplateTagBenchmark from './simple-template-tag';
 import advancedTemplateTagBenchmark from './advanced-template-tag';
 import streamingTemplateTagBenchmark from './streaming-template-tag';
@@ -62,6 +63,7 @@ const executeBenchmarks = async () => {
   await executeBenchmark('JSX Rev. 1', jsxRev1Benchmark);
   await executeBenchmark('JSX Rev. 2', jsxRev2Benchmark);
   await executeBenchmark('React', reactBenchmark);
+  await executeBenchmark('Preact', preactBenchmark);
   await executeBenchmark('Simple Template Tag', simpleTemplateTagBenchmark);
   await executeBenchmark('Advanced Template Tag', advancedTemplateTagBenchmark);
   await executeBenchmark('Streaming Template Tag', streamingTemplateTagBenchmark);
