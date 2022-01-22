@@ -20,6 +20,9 @@
   "dependencies": {
     "@types/classnames": "^2.2.11",
     "classnames": "^2.2.6",
+    "inferno": "^7.4.11",
+    "inferno-create-element": "^7.4.11",
+    "inferno-server": "^7.4.11",
     "preact": "^10.6.4",
     "preact-render-to-string": "^5.1.19",
     "react": "^17.0.1",
