@@ -124,8 +124,8 @@ const setUrl = (url: string, replace: boolean) => {
 
 const restoreScrollPosition = () => {
   const position = h.state?.scrollPosition;
-  if (position) {
-    window.scrollTo(...position);
+  if (Array.isArray(position)) {
+    window.scrollTo(position[0], position[1]);
   } else {
     let anchor;
     const hash = location.hash.slice(1);
@@ -257,7 +257,7 @@ export const navigateTo = async (targetUrl: string, body?: BodyInit, target?: st
   if (!targetUrl) {
     return;
   } else if (target === '_parent' && window.parent !== window) {
-    window.top.postMessage({ type: 'NAVIGATE', targetUrl }, window.location.origin);
+    window.top?.postMessage({ type: 'NAVIGATE', targetUrl }, window.location.origin);
     return;
   }
   saveScrollPosition();
