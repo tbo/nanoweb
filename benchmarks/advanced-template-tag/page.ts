@@ -7,28 +7,30 @@ const getRange = (to: number) => [...Array(to).keys()];
 const getQuery = (params: Record<string, string | number>) =>
   stringify(Object.fromEntries(Object.entries(params).filter(([, value]) => value)));
 
-const html = (literalSections: any, ...substs: any[]) => async (context: any) => {
-  const raw = literalSections.raw;
-  let result = '';
-  substs = substs.map((subst) => (typeof subst === 'function' ? subst(context) : subst));
-  for (let i = 0; i < substs.length; i++) {
-    let subst = substs[i];
-    subst = subst instanceof Promise ? await subst : subst;
-    result += raw[i];
-    if (Array.isArray(subst)) {
-      const list = subst.flat();
-      for (let j = 0; j < list.length; j++) {
-        let s = typeof list[j] === 'function' ? (list as any)[j]() : list[j];
-        s = s instanceof Promise ? await s : s;
-        result += s;
+const html =
+  (literalSections: any, ...substs: any[]) =>
+  async (context: any) => {
+    const raw = literalSections.raw;
+    let result = '';
+    substs = substs.map(subst => (typeof subst === 'function' ? subst(context) : subst));
+    for (let i = 0; i < substs.length; i++) {
+      let subst = substs[i];
+      subst = subst instanceof Promise ? await subst : subst;
+      result += raw[i];
+      if (Array.isArray(subst)) {
+        const list = subst.flat();
+        for (let j = 0; j < list.length; j++) {
+          let s = typeof list[j] === 'function' ? (list as any)[j]() : list[j];
+          s = s instanceof Promise ? await s : s;
+          result += s;
+        }
+      } else {
+        result += subst;
       }
-    } else {
-      result += subst;
     }
-  }
-  result += raw[raw.length - 1]; // (A)
-  return result;
-};
+    result += raw[raw.length - 1]; // (A)
+    return result;
+  };
 
 const Base = (contents: any) => html`
   <html lang="en">
@@ -40,9 +42,7 @@ const Base = (contents: any) => html`
     <body>
       <nav>
         <div className="nav-wrapper">
-          <a href="/" className="brand-logo" style="padding-left: 10">
-            Hybrid Search
-          </a>
+          <a href="/" className="brand-logo" style="padding-left: 10"> Hybrid Search </a>
           <ul id="nav-mobile" className="right hide-on-med-and-down">
             <li>
               <a href="/post-search">POST Example</a>
@@ -84,7 +84,8 @@ const getProductTile = ({ id, name, price, description, image }: any) => html`
   </div>
 `;
 
-const getPaginationEntry = (activePage: number, query: string) => (page: number) => html`
+const getPaginationEntry = (activePage: number, query: string) => (page: number) =>
+  html`
   <li className="${classNames('waves-effect', { active: activePage === page })}>
     <a href="?${getQuery({ query, page })}">${page + 1}</a>
   </li>

@@ -1,13 +1,14 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module":"CommonJS",
+    "module": "CommonJS",
     "target": "esnext",
     "lib": ["esnext"],
     "composite": true,
     "jsx": "react",
     "jsxFactory": "createElement",
-    "rootDir": "../"
+    "rootDir": "../",
+    "noImplicitAny": false
   },
   "include": ["**/*.ts", "**/*.tsx", "../packages/template/src/**/*.ts"]
 }
