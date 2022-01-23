@@ -1,17 +1,36 @@
 import classNames from 'classnames';
 import { stringify } from 'querystring';
 import getProducts from '../get-products';
-import { html } from '../../packages/template/src';
 
-const createElement = (type: any, props: Record<string, any> | undefined, ...children: any[]) => {
+interface Element {
+  type: ((opt: any) => Element) | ((opt: any) => Promise<Element>) | string;
+  props: Record<string, any>;
+  children: Element[];
+}
+
+const createElement = (type: any, props: Record<string, any> = {}, ...children: any[]): Element => ({
+  type: typeof type === 'function' ? type(Object.assign({ children }, props)) : type,
+  props,
+  children: children.flat(),
+});
+
+export const render = async (element: Element): Promise<string> => {
+  if (element.type instanceof Promise) {
+    element = await element.type;
+  }
+  const { type, props, children } = element;
   const propString = props ? Object.entries(props).map(toString).join('') : '';
   if (!children || !children.length) {
-    return html`<${type}${propString} />`;
+    return `<${type}${propString} />`;
   }
-  return html`<${type}${propString}>${children}</${type}>`;
-};
+  let result = `<${type}${propString}>`;
 
-(global as any).createElement = createElement;
+  for (const child of children) {
+    const r = render(child);
+    result += r instanceof Promise ? await r : r;
+  }
+  return result + `</${type}>`;
+};
 
 const CAMEL_CASE_PATTERN = new RegExp('[A-Z]*[a-z]+', 'g');
 

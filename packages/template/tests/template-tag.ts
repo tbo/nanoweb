@@ -48,6 +48,10 @@ describe('Template tag', () => {
     await matchSnapshot(() => html`unsafe: ${unsafeHtml(undefined)}`);
   });
 
+  test('Escape harmful values', async () => {
+    await matchSnapshot(() => html`escaped: ${'<b">generated html<\'/b&>'}`);
+  });
+
   test('Render zero', async () => {
     await matchSnapshot(() => html`zero: ${0}`);
     await matchSnapshot(() => html`zero: ${Promise.resolve(0)}`);

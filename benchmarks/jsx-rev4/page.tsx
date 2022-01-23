@@ -1,29 +1,84 @@
 import classNames from 'classnames';
 import { stringify } from 'querystring';
 import getProducts from '../get-products';
-import { Readable, PassThrough } from 'stream';
 
-const createElement = (
-  type: any,
-  props: Record<string, any> | undefined,
-  ...children: any[]
-): Promise<Element> | Element => ({
-  type,
-  props: props || {},
-  children,
-});
+const rxUnescaped = new RegExp(/["'&<>]/);
 
-interface Element<P = Record<string, any> | undefined, C = any> {
-  type: ((props: P, context?: C) => Promise<Element<P, C> | string> | Element<P, C> | string) | string;
-  props: P;
-  children: (Element<P, C> | Promise<Element<P, C>>)[];
+export function escape(text: any): string {
+  /* Much faster when there is no unescaped characters */
+  if (typeof text !== 'string' || !rxUnescaped.test(text)) {
+    return text;
+  }
+
+  let result = '';
+  let escape = '';
+  let start = 0;
+  let i;
+  for (i = 0; i < text.length; ++i) {
+    switch (text.charCodeAt(i)) {
+      case 34: // "
+        escape = '&quot;';
+        break;
+      case 39: // '
+        escape = '&#039;';
+        break;
+      case 38: // &
+        escape = '&amp;';
+        break;
+      case 60: // <
+        escape = '&lt;';
+        break;
+      case 62: // >
+        escape = '&gt;';
+        break;
+      default:
+        continue;
+    }
+    if (i > start) {
+      result += text.slice(start, i);
+    }
+    result += escape;
+    start = i + 1;
+  }
+  return result + text.slice(start, i);
 }
+
+const createElement = (type: any, props: Record<string, any> | undefined, ...children: any[]): any[] => {
+  if (typeof type === 'function') {
+    return type(Object.assign({ children }, props));
+  }
+  let propString = '';
+  if (props) {
+    for (const i in props) {
+      propString += toString(i, props[i]);
+    }
+  }
+  if (!children || !children.length) {
+    return ['<' + type + propString + '/>'];
+  }
+  const length = children.length + 2;
+  const result = new Array(length);
+  result[0] = '<' + type + propString + '>';
+  for (let i = 0; i < children.length; i++) {
+    result[i + 1] = escape(children[i]);
+  }
+  result[length - 1] = '</' + type + '>';
+  return result;
+};
+
+export const render = async (elements: any[]): Promise<string> => {
+  let result = '';
+  for (const child of elements.flat(100)) {
+    result += child instanceof Promise ? await child : child;
+  }
+  return result;
+};
+
 const CAMEL_CASE_PATTERN = new RegExp('[A-Z]*[a-z]+', 'g');
 
 const toKebapCase = (value: string) => value.match(CAMEL_CASE_PATTERN)!.join('-');
 
-const toString = (attribute: [string, any]) => {
-  let [key, value] = attribute;
+const toString = (key: string, value: any) => {
   if (value == null) {
     return '';
   } else if (key === 'className') {
@@ -34,68 +89,7 @@ const toString = (attribute: [string, any]) => {
       .join(';')
       .toLowerCase();
   }
-  return ` ${key.toLowerCase()}="${value}"`;
-};
-
-type Node = JSX.Element | Promise<Element | string | number> | Element | string | number;
-
-type OutputEntry = string | Promise<Node>;
-
-export const render = (
-  RootComponent: (context: any) => Promise<Node | Node[]> | Node | Node[],
-  context?: any,
-): Readable => {
-  const outputQueue: OutputEntry[] = ['<!DOCTYPE html>'];
-  const parseNode = (node: Promise<Node | Node[]> | Node | Node[]): OutputEntry[] => {
-    if (node == null) {
-      return [];
-    } else if (typeof node === 'string') {
-      return [node];
-    } else if (typeof node === 'number') {
-      return [String(node)];
-    } else if (node instanceof Promise) {
-      (node as any) = (node as Promise<any>).then(parseNode);
-      (node as Promise<any>).then(elements => spliceNode(elements, outputQueue.indexOf(node as any)));
-      return [node as any];
-    } else if (Array.isArray(node)) {
-      return node.flatMap(parseNode);
-    }
-    const { type, props } = node;
-    const children = (node.children as any).filter((child: any) => child != null);
-    if (typeof node.type === 'function') {
-      if (!children || !children.length) {
-        return parseNode(node.type(node.props, context));
-      }
-      return parseNode(node.type({ ...node.props, children: parseNode(children) }, context));
-    }
-    const propString = props ? Object.entries(props).map(toString).join('') : '';
-    if (!children || !children.length) {
-      return [`<${type}${propString}/>`];
-    }
-    return [`<${type}${propString}>`, ...(children as any).flatMap(parseNode), `</${type}>`];
-  };
-  const processQueue = () => {
-    let buffer = '';
-    while (typeof outputQueue[0] === 'string') {
-      buffer += outputQueue.shift();
-    }
-    sink.write(buffer);
-    if (outputQueue[0] instanceof Promise) {
-      outputQueue[0].then(processQueue);
-    } else {
-      sink.end();
-    }
-  };
-  const spliceNode = (elements: OutputEntry[], position: number) => {
-    if (position !== -1) {
-      outputQueue.splice(position, 1, ...elements);
-    }
-  };
-  const sink = new PassThrough({});
-
-  outputQueue.push(...parseNode(RootComponent(context)));
-  processQueue();
-  return sink;
+  return ` ${key.toLowerCase()}="${escape(value)}"`;
 };
 
 const getRange = (to: number) => [...Array(to).keys()];

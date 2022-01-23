@@ -12,6 +12,8 @@ exports[`Template tag Do not render \`undefined\` 1`] = `"undefined: "`;
 
 exports[`Template tag Do not render \`undefined\` 2`] = `"undefined: "`;
 
+exports[`Template tag Escape harmful values 1`] = `"escaped: &lt;b&quot;&gt;generated html&lt;&#039;/b&amp;&gt;"`;
+
 exports[`Template tag Render async template tag  1`] = `"async test"`;
 
 exports[`Template tag Render cached static strings 1`] = `"This can be repeated, This can be repeated"`;

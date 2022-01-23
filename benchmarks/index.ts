@@ -2,6 +2,8 @@ import { performance } from 'perf_hooks';
 import { Readable, Stream } from 'stream';
 import jsxRev1Benchmark from './jsx-rev1';
 import jsxRev2Benchmark from './jsx-rev2';
+import jsxRev3Benchmark from './jsx-rev3';
+import jsxRev4Benchmark from './jsx-rev4';
 import reactBenchmark from './react';
 import preactBenchmark from './preact';
 import infernoBenchmark from './inferno';
@@ -62,16 +64,28 @@ const executeBenchmark = async (label: string, benchmark: () => Promise<Readable
 
 const executeBenchmarks = async () => {
   await executeBenchmark('JSX Rev. 1', jsxRev1Benchmark);
-  await executeBenchmark('JSX Rev. 2', jsxRev2Benchmark);
   await executeBenchmark('React', reactBenchmark);
+  await executeBenchmark('@nanoweb/template String (current)', currentVersionBenchmark);
+  await executeBenchmark('@nanoweb/template Stream (current)', currentStreamVersionBenchmark);
+  await executeBenchmark('JSX Rev. 2', jsxRev2Benchmark);
+  await executeBenchmark('JSX Rev. 3', jsxRev3Benchmark);
+  await executeBenchmark('JSX Rev. 4', jsxRev4Benchmark);
   await executeBenchmark('Preact', preactBenchmark);
   await executeBenchmark('Inferno', infernoBenchmark);
   await executeBenchmark('Simple Template Tag', simpleTemplateTagBenchmark);
   await executeBenchmark('Advanced Template Tag', advancedTemplateTagBenchmark);
   await executeBenchmark('Streaming Template Tag', streamingTemplateTagBenchmark);
   await executeBenchmark('@nanoweb/template (published)', publishedVersionBenchmark);
-  await executeBenchmark('@nanoweb/template String (current)', currentVersionBenchmark);
-  await executeBenchmark('@nanoweb/template Stream (current)', currentStreamVersionBenchmark);
 };
-
+function streamToString(stream) {
+  const chunks = [];
+  return new Promise((resolve, reject) => {
+    stream.on('data', chunk => chunks.push(Buffer.from(chunk)));
+    stream.on('error', err => reject(err));
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+  });
+}
+// (async () => {
+//   console.log(await jsxRev4Benchmark());
+// })();
 executeBenchmarks();
