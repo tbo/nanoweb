@@ -23,6 +23,7 @@
     "inferno": "^7.4.11",
     "inferno-create-element": "^7.4.11",
     "inferno-server": "^7.4.11",
+    "nano-jsx": "^0.0.28",
     "preact": "^10.6.4",
     "preact-render-to-string": "^5.1.19",
     "react": "^17.0.1",

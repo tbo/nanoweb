@@ -4,6 +4,8 @@ import jsxRev1Benchmark from './jsx-rev1';
 import jsxRev2Benchmark from './jsx-rev2';
 import jsxRev3Benchmark from './jsx-rev3';
 import jsxRev4Benchmark from './jsx-rev4';
+import jsxRev5Benchmark from './jsx-rev5';
+import nanoJsxBenchmark from './nano-jsx';
 import reactBenchmark from './react';
 import preactBenchmark from './preact';
 import infernoBenchmark from './inferno';
@@ -70,6 +72,8 @@ const executeBenchmarks = async () => {
   await executeBenchmark('JSX Rev. 2', jsxRev2Benchmark);
   await executeBenchmark('JSX Rev. 3', jsxRev3Benchmark);
   await executeBenchmark('JSX Rev. 4', jsxRev4Benchmark);
+  await executeBenchmark('JSX Rev. 5', jsxRev5Benchmark);
+  await executeBenchmark('NanoJsx', nanoJsxBenchmark);
   await executeBenchmark('Preact', preactBenchmark);
   await executeBenchmark('Inferno', infernoBenchmark);
   await executeBenchmark('Simple Template Tag', simpleTemplateTagBenchmark);
@@ -86,6 +90,6 @@ function streamToString(stream) {
   });
 }
 // (async () => {
-//   console.log(await jsxRev4Benchmark());
+//   console.log(await nanoJsxBenchmark());
 // })();
 executeBenchmarks();
