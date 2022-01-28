@@ -410,6 +410,7 @@ li {
   -ms-hyphens: auto;
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
+  -webkit-hyphenate-character: '-';
   hyphens: auto;
   /* text-align: justify; */
   text-align: justify;
