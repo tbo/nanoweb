@@ -34,23 +34,23 @@
     <ul>
       
         <li class="">
-          <a href="/template/01-writing-templates.html">Writing templates</a>
+          <a href="/template/writing-templates/">Writing templates</a>
         </li>
       
         <li class="">
-          <a href="/template/02-caching-templates.html">Caching templates</a>
+          <a href="/template/caching-templates/">Caching templates</a>
         </li>
       
         <li class="">
-          <a href="/template/03-render-templates.html">Render templates</a>
+          <a href="/template/render-templates/">Render templates</a>
         </li>
       
         <li class="">
-          <a href="/template/04-use-context.html">Use context</a>
+          <a href="/template/use-context/">Use context</a>
         </li>
       
         <li class="">
-          <a href="/template/08-tools.html">Tools</a>
+          <a href="/template/tools/">Tools</a>
         </li>
       
       <li>
@@ -61,7 +61,7 @@
     <ul>
       
         <li class="">
-          <a href="/links/01-recipes.html">Recipes</a>
+          <a href="/links/recipes/">Recipes</a>
         </li>
       
       <li>
@@ -90,7 +90,7 @@
                 </ol>
             </nav>
 
-    <h2 id="what-is-nanoweb%3F">What is nanoweb?</h2>
+    <h2 id="what-is-nanoweb%3F" tabindex="-1">What is nanoweb?</h2>
 <p>nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs.</p>
 <ul>
 <li><strong>HTML-over-the-wire</strong>: Merges HTML responses instead of replacing the complete page.</li>
@@ -99,14 +99,14 @@
 <li><strong>Component-based</strong>: Build encapsulated components, then compose them to make complex UIs.</li>
 </ul>
 <p>nanoweb's ideas can be freely combined with other server-centric frameworks while avoiding a technology lock-in, which makes it a perfect fit for <a href="https://martinfowler.com/articles/micro-frontends.html">micro-frontends</a>.</p>
-<h2 id="motivation">Motivation</h2>
+<h2 id="motivation" tabindex="-1">Motivation</h2>
 <p>Frontend development has become increasingly complex over the past few years and the time required to manage this <strong>complexity often goes at the expense of the user experience</strong>. The amount of JavaScript and related payloads doesn't seem to be tenable in a time where the mobile web traffic eclipses that of desktops. <a href="https://reactjs.org/">React</a>, <a href="https://vuejs.org/">Vue.js</a> and <a href="https://angular.io/">Angular</a> are great frameworks, yet they are primarily geared towards highly interactive and long-running web applications. Anything outside of this scope has to live with the diminishing returns of those frameworks.</p>
 <p>This sentiment is shared by <a href="https://macwright.com/2020/05/10/spa-fatigue.html">more</a> and <a href="https://twitter.com/dan_abramov/status/1259614150386425858">more people</a> while new initiatives pop up: <a href="https://hotwire.dev/">Hotwire</a>, <a href="https://github.com/phoenixframework/phoenix_live_view">Phoenix LiveView</a>, <a href="https://reactjs.org/blog/2020/12/21/data-fetching-with-react-server-components.html">React Server Components</a>, <a href="https://laravel-livewire.com/">Livewire</a>. These solutions are usually rooted in pre-existing frameworks that add more abstraction. nanoweb, on the other hand, is just a small <strong>set of documented and tested helper functions for the framework-fatigued</strong>.</p>
 <p>nanoweb consists of <a href="https://www.npmjs.com/search?q=%40nanoweb">two packages</a> which can be used together or separately in combination with other frameworks.</p>
-<h2 id="links">Links</h2>
+<h2 id="links" tabindex="-1">Links</h2>
 <p>The <a href="https://www.npmjs.com/package/@nanoweb/links">nanoweb links package</a> makes navigating your web application faster. You get the performance benefits of a single page application without the added complexity of a client-side JavaScript framework. Use HTML to render your views on the server side and link to pages as usual. When you follow a link, <code>@nanoweb/links</code> automatically fetches the page, merges it into the current page, all without incurring the cost of a full page load. Besides performance optimizations and loading animations the page interaction will be indistinguishable from a static page.</p>
 <p>The real benefit of this solution kicks in once we need to keep state on the client. It is not required to repeatedly rehydrate the frontend anymore. We can keep the UI state always in memory and avoid flashing content. It shares some resemblance with <a href="https://github.com/turbolinks/turbolinks">Turbolinks</a>. But instead of simply swapping <code>body</code> content, we merge it with <a href="https://github.com/patrick-steele-idem/morphdom">morphdom</a> to avoid loosing form state.</p>
-<h2 id="templates">Templates</h2>
+<h2 id="templates" tabindex="-1">Templates</h2>
 <p>Templates are tagged <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">template literals</a> - they look like JavaScript strings but are enclosed in backticks (<code>`</code>) instead of quotes - and tagged with <code>@nanoweb/template</code>'s <code>html</code> tag:</p>
 <pre class="language-js"><code class="language-js">html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">></span></span>Hello <span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span></span><span class="token template-punctuation string">`</span></span></code></pre>
 <p>Since templates almost always need to merge in data from JavaScript values, they'll most often be written within functions that take some data and return a template, so that the function can be called multiple times:</p>
@@ -114,7 +114,7 @@
 <p>Template values are not limited to primitive data types, but they can contain <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promises</a> as well.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token function-variable function">fetchUsername</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">userId</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span> <span class="token punctuation">[</span><span class="token operator">...</span> fetch <span class="token keyword">from</span> <span class="token constant">DB</span> <span class="token operator">...</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">;</span><br><br><span class="token keyword">const</span> <span class="token function-variable function">myTemplate</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">userId</span><span class="token punctuation">)</span> <span class="token operator">=></span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html"><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>Username: <span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">fetchUsername</span><span class="token punctuation">(</span>userId<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><br></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span></code></pre>
 <p><code>html</code> returns a <code>Template</code>, which can be transformed into a string by passing it to <code>renderToString</code>.</p>
-<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token function">myTemplate</span><span class="token punctuation">(</span><span class="token punctuation">{</span>title<span class="token operator">:</span> <span class="token string">'Hello'</span><span class="token punctuation">,</span> body<span class="token operator">:</span> <span class="token string">'nanoweb is cool'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token keyword">const</span> text <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">renderToString</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token function">myTemplate</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">'Hello'</span><span class="token punctuation">,</span> <span class="token literal-property property">body</span><span class="token operator">:</span> <span class="token string">'nanoweb is cool'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token keyword">const</span> text <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">renderToString</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>Ready to try it yourself? Head over to <a href="/getting-started.html">Getting Started</a>.</p>
 
   </article>
