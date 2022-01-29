@@ -19,6 +19,7 @@
   "homepage": "https://github.com/tbo/nanoweb#readme",
   "dependencies": {
     "@types/classnames": "^2.2.11",
+    "async-jsx-html": "^1.2.5",
     "classnames": "^2.2.6",
     "inferno": "^7.4.11",
     "inferno-create-element": "^7.4.11",
