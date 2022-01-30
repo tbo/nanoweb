@@ -10,7 +10,7 @@ export function escapeText(text: any): string {
   let result = '';
   let escape = '';
   let start = 0;
-  let i;
+  let i: number;
   for (i = 0; i < text.length; ++i) {
     switch (text.charCodeAt(i)) {
       case 34: // "
@@ -40,46 +40,55 @@ export function escapeText(text: any): string {
   return result + text.slice(start, i);
 }
 
-class UnsafeHtml extends String {}
-export const unsafeHtml = (value = '') => new UnsafeHtml(value);
+class Template extends String {}
+export const unsafeHtml = (value = '') => new Template(value);
+
+export type TemplateElement =
+  | false
+  | string
+  | number
+  | undefined
+  | null
+  | Template
+  | TemplateElement[]
+  | Promise<TemplateElement>;
 
 const cache = new Map();
 const repeatedWhitespace = /\s{1,}/g;
 const whitespace = /\r\n|\n|\r|(\s{1,}(?=<))/g;
 
-const resolve = (subst: any): Promise<string> | string => {
+const resolve = (subst: TemplateElement) => {
   if (subst instanceof Promise) {
     return subst.then(resolve);
   } else if (Array.isArray(subst)) {
-    return Promise.all(subst).then(async t => {
+    return Promise.all(subst as any).then(async t => {
       let result = '';
-      for (let j = 0; j < t.length; j++) {
-        const r2 = resolve(t[j]);
-        result += r2 instanceof Promise ? await r2 : r2;
+      for (let i = 0; i < t.length; i++) {
+        const tmp = resolve(t[i]);
+        result += tmp instanceof Promise ? await tmp : tmp;
       }
       return result;
     });
-  } else if (typeof subst === 'number' || (subst as any) instanceof UnsafeHtml) {
+  } else if (typeof subst === 'number' || subst instanceof Template) {
     return subst;
-  } else if (!subst && subst !== 0) {
+  } else if (!subst) {
     return '';
   } else {
     return escapeText(String(subst));
   }
 };
 
-export const html = async (literalSections: any, ...substs: any[]) => {
+export const html = async (literalSections: TemplateStringsArray, ...substs: TemplateElement[]): Promise<Template> => {
   let raw = cache.get(literalSections);
   if (raw === undefined) {
     raw = literalSections.raw.map((item: string) => item.replace(whitespace, ' ').replace(repeatedWhitespace, ' '));
     cache.set(literalSections, raw);
   }
-  let result = '';
+  let result = raw[0];
   for (let i = 0; i < substs.length; i++) {
-    result += raw[i];
-    const r2 = resolve(substs[i]);
-    result += r2 instanceof Promise ? await r2 : r2;
+    const tmp = resolve(substs[i]);
+    result += tmp instanceof Promise ? await tmp : tmp;
+    result += raw[i + 1];
   }
-  result += raw[raw.length - 1]; // (A)
-  return new UnsafeHtml(result);
+  return new Template(result);
 };
