@@ -1,5 +1,5 @@
 import { performance } from 'perf_hooks';
-import { Readable, Stream } from 'stream';
+import { Readable, Stream, Transform } from 'stream';
 import jsxRev1Benchmark from './jsx-rev1';
 import jsxRev2Benchmark from './jsx-rev2';
 import jsxRev3Benchmark from './jsx-rev3';
@@ -12,12 +12,13 @@ import preactBenchmark from './preact';
 import infernoBenchmark from './inferno';
 import simpleTemplateTagBenchmark from './simple-template-tag';
 import advancedTemplateTagBenchmark from './advanced-template-tag';
+// import advancedStreamingTemplateTagBenchmark from './advanced-streaming-template-tag';
 import streamingTemplateTagBenchmark from './streaming-template-tag';
 import currentVersionBenchmark from './current-version';
 import currentStreamVersionBenchmark from './current-stream-version';
 import publishedVersionBenchmark from './published-version';
 
-const SAMPLES = 10000;
+const SAMPLES = 1000;
 
 const toString = (stream: Readable) => {
   let buffer = '';
@@ -81,6 +82,7 @@ const executeBenchmarks = async () => {
   await executeBenchmark('Inferno', infernoBenchmark);
   await executeBenchmark('Simple Template Tag', simpleTemplateTagBenchmark);
   await executeBenchmark('Advanced Template Tag', advancedTemplateTagBenchmark);
+  // await executeBenchmark('Advanced Streaming Template Tag', advancedStreamingTemplateTagBenchmark);
   await executeBenchmark('Streaming Template Tag', streamingTemplateTagBenchmark);
   await executeBenchmark('@nanoweb/template (published)', publishedVersionBenchmark);
 };
@@ -93,6 +95,6 @@ function streamToString(stream) {
   });
 }
 // (async () => {
-//   console.log(await advancedTemplateTagBenchmark());
+//   console.log(await streamToString(await advancedStreamingTemplateTagBenchmark()));
 // })();
 executeBenchmarks();
