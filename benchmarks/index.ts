@@ -17,7 +17,7 @@ import currentVersionBenchmark from './current-version';
 import currentStreamVersionBenchmark from './current-stream-version';
 import publishedVersionBenchmark from './published-version';
 
-const SAMPLES = 1000;
+const SAMPLES = 10000;
 
 const toString = (stream: Readable) => {
   let buffer = '';
@@ -25,7 +25,7 @@ const toString = (stream: Readable) => {
   return new Promise(resolve => stream.on('end', () => resolve(buffer)));
 };
 
-const formatLatency = (input: number) => String(input.toFixed(2)).padStart(6);
+const formatLatency = (input: number) => String(input.toFixed(3)).padStart(6);
 const formatSize = (input: number) => `${Math.round(input / 1024 / 1024)} MB`.padStart(6);
 
 const printStats = (label: string, timings: number[], format: (input: number) => string) => {
@@ -44,7 +44,9 @@ const executeBenchmark = async (label: string, benchmark: () => Promise<Readable
   const baseConsumption = process.memoryUsage().heapUsed;
 
   // Warmup
-  await benchmark();
+  for (let i = 1; i <= 100; i++) {
+    await benchmark();
+  }
   global.gc();
   for (let i = 1; i <= SAMPLES; i++) {
     const start = performance.now();
@@ -52,7 +54,6 @@ const executeBenchmark = async (label: string, benchmark: () => Promise<Readable
     if (response instanceof Stream) {
       response.once('data', () => timeToFirstByte.push(performance.now() - start));
       await new Promise(resolve => response.on('end', resolve));
-      // console.log(await toString(response));
     } else {
       timeToFirstByte.push(performance.now() - start);
     }
@@ -66,18 +67,18 @@ const executeBenchmark = async (label: string, benchmark: () => Promise<Readable
 };
 
 const executeBenchmarks = async () => {
-  // await executeBenchmark('JSX Rev. 1', jsxRev1Benchmark);
-  // await executeBenchmark('React', reactBenchmark);
-  // await executeBenchmark('@nanoweb/template String (current)', currentVersionBenchmark);
-  // await executeBenchmark('@nanoweb/template Stream (current)', currentStreamVersionBenchmark);
-  // await executeBenchmark('JSX Rev. 2', jsxRev2Benchmark);
-  // await executeBenchmark('JSX Rev. 3', jsxRev3Benchmark);
-  // await executeBenchmark('JSX Rev. 4', jsxRev4Benchmark);
-  // await executeBenchmark('JSX Rev. 5', jsxRev5Benchmark);
-  // await executeBenchmark('NanoJsx', nanoJsxBenchmark);
-  // await executeBenchmark('async-jsx-html', asyncJsxHtml);
-  // await executeBenchmark('Preact', preactBenchmark);
-  // await executeBenchmark('Inferno', infernoBenchmark);
+  await executeBenchmark('JSX Rev. 1', jsxRev1Benchmark);
+  await executeBenchmark('React', reactBenchmark);
+  await executeBenchmark('@nanoweb/template String (current)', currentVersionBenchmark);
+  await executeBenchmark('@nanoweb/template Stream (current)', currentStreamVersionBenchmark);
+  await executeBenchmark('JSX Rev. 2', jsxRev2Benchmark);
+  await executeBenchmark('JSX Rev. 3', jsxRev3Benchmark);
+  await executeBenchmark('JSX Rev. 4', jsxRev4Benchmark);
+  await executeBenchmark('JSX Rev. 5', jsxRev5Benchmark);
+  await executeBenchmark('NanoJsx', nanoJsxBenchmark);
+  await executeBenchmark('async-jsx-html', asyncJsxHtml);
+  await executeBenchmark('Preact', preactBenchmark);
+  await executeBenchmark('Inferno', infernoBenchmark);
   await executeBenchmark('Simple Template Tag', simpleTemplateTagBenchmark);
   await executeBenchmark('Advanced Template Tag', advancedTemplateTagBenchmark);
   await executeBenchmark('Streaming Template Tag', streamingTemplateTagBenchmark);

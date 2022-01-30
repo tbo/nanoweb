@@ -54,8 +54,6 @@ export type TemplateElement =
   | Promise<TemplateElement>;
 
 const cache = new Map();
-const repeatedWhitespace = /\s{1,}/g;
-const whitespace = /\r\n|\n|\r|(\s{1,}(?=<))/g;
 
 const resolve = (subst: TemplateElement) => {
   if (subst instanceof Promise) {
@@ -81,7 +79,7 @@ const resolve = (subst: TemplateElement) => {
 export const html = async (literalSections: TemplateStringsArray, ...substs: TemplateElement[]): Promise<Template> => {
   let raw = cache.get(literalSections);
   if (raw === undefined) {
-    raw = literalSections.raw.map((item: string) => item.replace(whitespace, ' ').replace(repeatedWhitespace, ' '));
+    raw = literalSections.raw.map((item: string) => item.replace(/>\s+|\s+</g, m => m.trim()));
     cache.set(literalSections, raw);
   }
   let result = raw[0];

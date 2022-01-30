@@ -18,7 +18,7 @@ exports[`Template tag Render async template tag  1`] = `"async test"`;
 
 exports[`Template tag Render cached static strings 1`] = `"This can be repeated, This can be repeated"`;
 
-exports[`Template tag Render embedded async lists 1`] = `" <div> <h1>headline</h1><div>test</div>123some text </div> "`;
+exports[`Template tag Render embedded async lists 1`] = `"<div><h1>headline</h1><div>test</div>123some text</div>"`;
 
 exports[`Template tag Render embedded async number 1`] = `"async 42"`;
 
@@ -28,7 +28,7 @@ exports[`Template tag Render embedded async template tag 1`] = `"another async t
 
 exports[`Template tag Render embedded list 1`] = `"another Hello&lt;b&gt;World&lt;/b&gt;<b>!</b>"`;
 
-exports[`Template tag Render embedded nested async lists 1`] = `" <div> <h1>headline</h1><div>test</div>&lt;script&gt;escaped&lt;/script&gt;123some text<h1>headline</h1><div>test</div>&lt;script&gt;escaped&lt;/script&gt;123some text </div> "`;
+exports[`Template tag Render embedded nested async lists 1`] = `"<div><h1>headline</h1><div>test</div>&lt;script&gt;escaped&lt;/script&gt;123some text<h1>headline</h1><div>test</div>&lt;script&gt;escaped&lt;/script&gt;123some text</div>"`;
 
 exports[`Template tag Render embedded template tag 1`] = `"another template tag"`;
 
