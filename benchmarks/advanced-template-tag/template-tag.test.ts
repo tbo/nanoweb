@@ -1,8 +1,8 @@
-import { html, unsafeHtml } from './page';
+import { html, unsafeHtml } from './html';
 
 const matchSnapshot = async (getComponent: () => any) => {
   const syncResult = await getComponent();
-  expect(syncResult).toMatchSnapshot();
+  expect(String(syncResult)).toMatchSnapshot();
 };
 
 describe('Template tag', () => {
