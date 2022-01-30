@@ -1,4 +1,4 @@
 import Page from './page';
 
-const executeBenchmark = () => Page().then((next) => next({}));
+const executeBenchmark = Page;
 export default executeBenchmark;

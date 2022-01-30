@@ -66,16 +66,16 @@ const executeBenchmark = async (label: string, benchmark: () => Promise<Readable
 };
 
 const executeBenchmarks = async () => {
-  await executeBenchmark('JSX Rev. 1', jsxRev1Benchmark);
+  // await executeBenchmark('JSX Rev. 1', jsxRev1Benchmark);
   await executeBenchmark('React', reactBenchmark);
   await executeBenchmark('@nanoweb/template String (current)', currentVersionBenchmark);
   await executeBenchmark('@nanoweb/template Stream (current)', currentStreamVersionBenchmark);
-  await executeBenchmark('JSX Rev. 2', jsxRev2Benchmark);
-  await executeBenchmark('JSX Rev. 3', jsxRev3Benchmark);
+  // await executeBenchmark('JSX Rev. 2', jsxRev2Benchmark);
+  // await executeBenchmark('JSX Rev. 3', jsxRev3Benchmark);
   await executeBenchmark('JSX Rev. 4', jsxRev4Benchmark);
-  await executeBenchmark('JSX Rev. 5', jsxRev5Benchmark);
-  await executeBenchmark('NanoJsx', nanoJsxBenchmark);
-  await executeBenchmark('async-jsx-html', asyncJsxHtml);
+  // await executeBenchmark('JSX Rev. 5', jsxRev5Benchmark);
+  // await executeBenchmark('NanoJsx', nanoJsxBenchmark);
+  // await executeBenchmark('async-jsx-html', asyncJsxHtml);
   await executeBenchmark('Preact', preactBenchmark);
   await executeBenchmark('Inferno', infernoBenchmark);
   await executeBenchmark('Simple Template Tag', simpleTemplateTagBenchmark);
@@ -91,7 +91,7 @@ function streamToString(stream) {
     stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
   });
 }
-(async () => {
-  console.log(await asyncJsxHtml());
-})();
+// (async () => {
+//   console.log(await advancedTemplateTagBenchmark());
+// })();
 executeBenchmarks();

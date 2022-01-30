@@ -1,5 +1,5 @@
 module.exports = {
-  projects: ['<rootDir>/packages/*'],
+  projects: ['<rootDir>/packages/*', '<rootDir>/benchmarks/*'],
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coverageThreshold: {

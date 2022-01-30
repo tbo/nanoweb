@@ -13,7 +13,7 @@ export function escape(text: any): string {
   let result = '';
   let escape = '';
   let start = 0;
-  let i;
+  let i: number;
   for (i = 0; i < text.length; ++i) {
     switch (text.charCodeAt(i)) {
       case 34: // "
@@ -43,9 +43,22 @@ export function escape(text: any): string {
   return result + text.slice(start, i);
 }
 
-const createElement = (type: any, props: Record<string, any> | undefined, ...children: any[]): any[] => {
+export class Template extends Array {}
+
+const createElement = (type: any, props: Record<string, any> | null, ...children: any[]): any[] => {
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
+    if (!(child instanceof Template)) {
+      children[i] = escape(child);
+    }
+  }
   if (typeof type === 'function') {
-    return type(Object.assign({ children }, props));
+    if (props) {
+      props.children = children;
+    } else {
+      props = { children };
+    }
+    return type(props);
   }
   let propString = '';
   if (props) {
@@ -53,22 +66,23 @@ const createElement = (type: any, props: Record<string, any> | undefined, ...chi
       propString += toString(i, props[i]);
     }
   }
+  const template = new Template();
   if (!children || !children.length) {
-    return ['<' + type + propString + '/>'];
+    template[0] = '<' + type + propString + '/>';
+    return template;
   }
-  const length = children.length + 2;
-  const result = new Array(length);
-  result[0] = '<' + type + propString + '>';
-  for (let i = 0; i < children.length; i++) {
-    result[i + 1] = escape(children[i]);
+  const length = children.length;
+  template[0] = '<' + type + propString + '>';
+  for (let i = 0; i < length; i++) {
+    template[i + 1] = children[i];
   }
-  result[length - 1] = '</' + type + '>';
-  return result;
+  template[length + 1] = '</' + type + '>';
+  return template;
 };
 
 export const render = async (elements: any[]): Promise<string> => {
   let result = '';
-  for (const child of elements.flat(100)) {
+  for (const child of elements.flat(1000)) {
     result += child instanceof Promise ? await child : child;
   }
   return result;
@@ -173,6 +187,7 @@ const Category = async () => {
           ))}
         </ul>
       )}
+      {['<test/>']}
     </Base>
   );
 };
