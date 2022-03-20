@@ -74,7 +74,7 @@ export function escapeText(text: any): string {
   return result + text.slice(start, i);
 }
 
-const resolve = (element: TemplateElement): any => {
+const resolve = (element: TemplateElement): TemplateElement => {
   if (element instanceof Template) {
     return element;
   } else if (Array.isArray(element)) {
