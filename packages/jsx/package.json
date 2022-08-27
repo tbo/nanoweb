@@ -1,0 +1,30 @@
+{
+  "name": "@nanoweb/jsx",
+  "version": "0.0.1",
+  "description": "nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "../../node_modules/.bin/jest",
+    "build": "../../node_modules/.bin/tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tbo/nanoweb.git"
+  },
+  "author": "Thomas Bonk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tbo/nanoweb/issues"
+  },
+  "homepage": "https://nanoweb.js.org/",
+  "dependencies": {
+    "csstype": "3.1.0"
+  }
+}
