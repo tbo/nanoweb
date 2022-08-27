@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "module":"CommonJS",
+    "module": "CommonJS",
     "target": "esnext",
     "lib": ["esnext", "DOM"],
     "rootDir": "../packages",
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "include": ["../packages/**/*.ts"],
   "typedocOptions": {
