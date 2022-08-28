@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "../../node_modules/.bin/jest",
-    "build": "../../node_modules/.bin/tsc",
+    "build": "npm run clean && ../../node_modules/.bin/tsc --build --force",
     "clean": "git clean -Xdf"
   },
   "repository": {
