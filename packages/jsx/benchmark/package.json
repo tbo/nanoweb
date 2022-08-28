@@ -1,0 +1,27 @@
+{
+  "name": "@nanoweb/benchmarks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV=production node -r ts-node/register/transpile-only --expose-gc -- index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tbo/nanoweb.git"
+  },
+  "author": "Thomas Bonk",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/tbo/nanoweb/issues"
+  },
+  "homepage": "https://github.com/tbo/nanoweb#readme",
+  "dependencies": {
+    "@types/classnames": "^2.2.11",
+    "classnames": "^2.2.6",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "ts-node": "^9.1.1"
+  }
+}
