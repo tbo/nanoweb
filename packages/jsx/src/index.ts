@@ -1,5 +1,4 @@
-/* eslint-disable no-param-reassign */
-///<reference path="./typings/index.d.ts" />
+///<reference path="./typings.d.ts" />
 const rxUnescaped = new RegExp(/["'&<>]/);
 
 export const render = async (element: any): Promise<string> => {

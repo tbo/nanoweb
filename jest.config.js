@@ -1,7 +1,7 @@
 module.exports = {
   projects: ['<rootDir>/packages/*', '<rootDir>/benchmarks/'],
   collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  collectCoverageFrom: ['<rootDir>/src/**/*.tsx?'],
   coverageThreshold: {
     global: {
       branches: 100,

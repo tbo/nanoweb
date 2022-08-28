@@ -7,7 +7,8 @@
     "lib": ["esnext"],
     "rootDir": "src",
     "composite": true,
-    "outDir": "dist"
+    "outDir": "."
   },
+  "exclude": [],
   "include": ["./src/**/*.ts"]
 }
