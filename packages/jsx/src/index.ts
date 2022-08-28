@@ -4,22 +4,25 @@ const rxUnescaped = new RegExp(/["'&<>]/);
 export const render = async (element: any): Promise<string> => {
   const awaited = await element;
   if (awaited instanceof Template) {
-    console.log('a');
     return '<!DOCTYPE html>' + (await resolve(element));
   }
-  console.log('b');
   return String(element);
 };
 
 const resolve = async (elements: any): Promise<string> => {
   let result = '';
+  console.log('------------------------------->', elements);
   if (Array.isArray(elements)) {
+    console.log('a');
     for (const child of elements) {
       result += await resolve(child instanceof Promise ? await child : child);
     }
   } else if (elements || elements === 0) {
+    console.log('b');
     return elements;
   }
+
+  console.log('c');
   return result;
 };
 

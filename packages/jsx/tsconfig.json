@@ -5,10 +5,9 @@
     "target": "esnext",
     "types": ["node", "jest"],
     "lib": ["esnext"],
-    "rootDir": "src",
     "composite": true,
     "outDir": "."
   },
-  "exclude": [],
-  "include": ["./src/**/*.ts"]
+  "exclude": ["node_modules"],
+  "include": ["./src/**/*"]
 }
