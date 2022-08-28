@@ -5,7 +5,6 @@
     "target": "esnext",
     "types": ["node", "jest"],
     "lib": ["esnext"],
-    "composite": true,
     "rootDir": "./src/",
     "outDir": "."
   },
