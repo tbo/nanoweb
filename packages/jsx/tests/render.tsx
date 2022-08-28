@@ -2,6 +2,13 @@ import { render } from '@nanoweb/jsx';
 
 const matchSnapshot = async (getComponent: () => JSX.Element) => expect(await render(getComponent())).toMatchSnapshot();
 
+const Custom = (props: any) => <span>{props.children}</span>;
+
+const AsyncCustom = async (props: any) => {
+  await new Promise(resolve => setTimeout(resolve, 10));
+  return <span>{props.children}</span>;
+};
+
 describe('Render to string', () => {
   test('Simple static component', async () => {
     await matchSnapshot(() => (
@@ -83,6 +90,20 @@ describe('Render to string', () => {
                 {Promise.resolve('!')}
               </span>,
             )}
+          </p>
+        </body>
+      </html>
+    ));
+  });
+
+  test('Custom component', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head></head>
+        <body class="main">
+          <Custom>abc</Custom>
+          <p>
+            <AsyncCustom>def</AsyncCustom>
           </p>
         </body>
       </html>
