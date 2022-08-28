@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render to string Async netsting 1`] = `"<!DOCTYPE html><html><head></head><body class=\\"main\\">helloworld<p><span style=\\"color:red\\">some text!</span></p></body></html>"`;
+
+exports[`Render to string Component nesting 1`] = `"<!DOCTYPE html><html><head></head><body><div>123</div></body></html>"`;
+
+exports[`Render to string Escape dangerous strings 1`] = `"<!DOCTYPE html><html><head></head><body>&lt;script&gt;alert(&quot;hacked&quot;)&lt;/script&gt;</body></html>"`;
+
+exports[`Render to string Self closing tags 1`] = `"<!DOCTYPE html><html><head><meta name=\\"test\\"/></head><body><br/><hr/><img/></body></html>"`;
+
+exports[`Render to string Simple nesting 1`] = `"<!DOCTYPE html><html><head><title>a title</title></head><body>123<p>test</p></body></html>"`;
+
 exports[`Render to string Simple static component 1`] = `"<!DOCTYPE html><html><head></head><body>content</body></html>"`;
 
 exports[`Render to string async component 1`] = `"<!DOCTYPE html><html><head></head><body>content</body></html>"`;

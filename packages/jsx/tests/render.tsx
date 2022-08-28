@@ -21,74 +21,71 @@ describe('Render to string', () => {
     ));
   });
 
-  //   await matchSnapshot(
-  //     () => html`
-  //       <html>
-  //         <head></head>
-  //         <body>
-  //           ${html`
-  //             <x-button>
-  //               content
-  //             </x-button>
-  //           `}
-  //         </body>
-  //       </html>
-  //     `,
-  //     { transformResult: addWebComponentScripts },
-  //   );
+  test('Simple nesting', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head>
+          <title>{'a title'}</title>
+        </head>
+        <body>
+          {123}
+          {undefined}
+          <p>{null}test</p>
+        </body>
+      </html>
+    ));
+  });
 
-  //   await matchSnapshot(
-  //     () => html`
-  //       <html>
-  //         <head></head>
-  //         <body>
-  //           ${[
-  //             html`
-  //               <x-button>
-  //                 content
-  //               </x-button>
-  //             `,
-  //           ]}
-  //         </body>
-  //       </html>
-  //     `,
-  //     { transformResult: addWebComponentScripts },
-  //   );
+  test('Component nesting', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head></head>
+        <body>{<div>123</div>}</body>
+      </html>
+    ));
+  });
 
-  //   await matchSnapshot(
-  //     () => html`
-  //       <html>
-  //         <head></head>
-  //         <body>
-  //           ${Promise.resolve(
-  //             html`
-  //               <x-button>
-  //                 content
-  //               </x-button>
-  //             `,
-  //           )}
-  //         </body>
-  //       </html>
-  //     `,
-  //     { transformResult: addWebComponentScripts },
-  //   );
+  test('Self closing tags', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head>
+          <meta name="test" />
+        </head>
+        <body>
+          <br />
+          <hr />
+          <img src="" />
+        </body>
+      </html>
+    ));
+  });
 
-  //   await matchSnapshot(
-  //     () => html`
-  //       <html>
-  //         <head></head>
-  //         <body>
-  //           ${Promise.resolve([
-  //             html`
-  //               <x-button>
-  //                 content
-  //               </x-button>
-  //             `,
-  //           ])}
-  //         </body>
-  //       </html>
-  //     `,
-  //     { transformResult: addWebComponentScripts },
-  //   );
-  // });
+  test('Escape dangerous strings', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head></head>
+        <body>{'<script>alert("hacked")</script>'}</body>
+      </html>
+    ));
+  });
+
+  test('Async netsting', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head></head>
+        <body class="main">
+          {Promise.resolve('hello')}
+          {Promise.resolve(['world'])}
+          <p>
+            {Promise.resolve(
+              <span style={{ color: 'red' }}>
+                some {'text'}
+                {Promise.resolve('!')}
+              </span>,
+            )}
+          </p>
+        </body>
+      </html>
+    ));
+  });
 });
