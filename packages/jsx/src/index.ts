@@ -4,8 +4,10 @@ const rxUnescaped = new RegExp(/["'&<>]/);
 export const render = async (element: any): Promise<string> => {
   const awaited = await element;
   if (awaited instanceof Template) {
+    console.log('a');
     return '<!DOCTYPE html>' + (await resolve(element));
   }
+  console.log('b');
   return String(element);
 };
 

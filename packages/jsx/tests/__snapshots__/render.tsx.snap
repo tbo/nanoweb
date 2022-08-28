@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render to string without options 1`] = `"<!DOCTYPE html><html><head></head><body>content</body></html>"`;

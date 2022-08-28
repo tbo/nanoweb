@@ -1,27 +1,15 @@
-// const matchSnapshot = async (getComponent: () => Template | Promise<Template>, options?: StringRenderOptions) =>
-//   expect(await renderToString(getComponent(), options)).toMatchSnapshot();
+import { render } from '@nanoweb/jsx';
 
-// export const addWebComponentScripts = (text: string, webComponents: string[]) => {
-//   if (!webComponents.length) {
-//     return text;
-//   }
-//   const to = webComponents.map((name: string) => `<script src="/assets/${name}.js"></script>`).join('') + '</body>';
-//   return text.replace('</body>', to);
-// };
+const matchSnapshot = async (getComponent: () => JSX.Element) => expect(await render(getComponent())).toMatchSnapshot();
 
 describe('Render to string', () => {
   test('without options', async () => {
-    console.log(<div>test</div>);
-    // await matchSnapshot(
-    //   () => html`
-    //     <html>
-    //       <head></head>
-    //       <body>
-    //         content
-    //       </body>
-    //     </html>
-    //   `,
-    // );
+    await matchSnapshot(() => (
+      <html>
+        <head></head>
+        <body>content</body>
+      </html>
+    ));
   });
 
   // test('with web components, but without options', async () => {
