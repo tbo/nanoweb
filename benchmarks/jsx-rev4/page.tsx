@@ -80,10 +80,22 @@ const createElement = (type: any, props: Record<string, any> | null, ...children
   return template;
 };
 
-export const render = async (elements: any[]): Promise<string> => {
+export const render = async (element: any): Promise<string> => {
+  const awaited = await element;
+  if (awaited instanceof Template) {
+    return '<!DOCTYPE html>' + (await resolve(awaited));
+  }
+  return String(element);
+};
+
+const resolve = async (elements: any): Promise<string> => {
   let result = '';
-  for (const child of elements.flat(1000)) {
-    result += child instanceof Promise ? await child : child;
+  if (Array.isArray(elements)) {
+    for (const child of elements) {
+      result += await resolve(child instanceof Promise ? await child : child);
+    }
+  } else if (elements || elements === 0) {
+    return elements;
   }
   return result;
 };

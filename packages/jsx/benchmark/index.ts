@@ -1,6 +1,5 @@
 import { performance } from 'perf_hooks';
 import { Readable, Stream } from 'stream';
-import jsxRev4Benchmark from './jsx-rev4';
 import current from './current';
 import reactBenchmark from './react';
 
@@ -55,7 +54,6 @@ const executeBenchmark = async (label: string, benchmark: () => Promise<Readable
 
 const executeBenchmarks = async () => {
   await executeBenchmark('React', reactBenchmark);
-  await executeBenchmark('JSX Rev. 4', jsxRev4Benchmark);
   await executeBenchmark('current', current);
 };
 

@@ -84,6 +84,33 @@ const SELF_CLOSING = new Set([
 ]);
 
 export const jsx = (type: any, props: Record<string, any>): Template => {
+  if (typeof type === 'function') {
+    return type(props);
+  }
+  if (typeof type === 'undefined') {
+    if (props.children) {
+      return Template.from(props.children);
+    } else {
+      return new Template();
+    }
+  }
+  let propString = '';
+  if (props) {
+    for (const i in props) {
+      if (props[i] || props[i] === 0) {
+        propString += toString(i, props[i]);
+      }
+    }
+  }
+  if (!props.children) {
+    const template = new Template();
+    if (SELF_CLOSING.has(type)) {
+      template[0] = '<' + type + propString + '/>';
+    } else {
+      template[0] = '<' + type + propString + '></' + type + '>';
+    }
+    return template;
+  }
   const children = !props.children
     ? []
     : Array.isArray(props?.children) && !(props.children instanceof Template)
@@ -93,20 +120,6 @@ export const jsx = (type: any, props: Record<string, any>): Template => {
     const child = children[i];
     if (!(child instanceof Template)) {
       children[i] = escape(child);
-    }
-  }
-  if (typeof type === 'undefined') {
-    return Template.from(children);
-  }
-  if (typeof type === 'function') {
-    return type(props);
-  }
-  let propString = '';
-  if (props) {
-    for (const i in props) {
-      if (props[i] || props[i] === 0) {
-        propString += toString(i, props[i]);
-      }
     }
   }
   const template = new Template();
