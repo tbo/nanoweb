@@ -5,12 +5,6 @@ import reactBenchmark from './react';
 
 const SAMPLES = 1000;
 
-const toString = (stream: Readable) => {
-  let buffer = '';
-  stream.on('data', (data: string) => (buffer += data.toString()));
-  return new Promise(resolve => stream.on('end', () => resolve(buffer)));
-};
-
 const formatLatency = (input: number) => String(input.toFixed(3)).padStart(6);
 const formatSize = (input: number) => `${Math.round(input / 1024 / 1024)} MB`.padStart(6);
 
@@ -57,15 +51,4 @@ const executeBenchmarks = async () => {
   await executeBenchmark('current', current);
 };
 
-// function streamToString(stream) {
-//   const chunks = [];
-//   return new Promise((resolve, reject) => {
-//     stream.on('data', chunk => chunks.push(Buffer.from(chunk)));
-//     stream.on('error', err => reject(err));
-//     stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-//   });
-// }
-// (async () => {
-//   console.log(await streamToString(await advancedStreamingTemplateTagBenchmark()));
-// })();
 executeBenchmarks();

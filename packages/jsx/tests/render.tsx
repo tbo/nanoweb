@@ -105,6 +105,7 @@ describe('Render to string', () => {
           <p>
             <AsyncCustom>def</AsyncCustom>
           </p>
+          {[<Custom>ghi</Custom>, <AsyncCustom>jkm</AsyncCustom>]}
         </body>
       </html>
     ));

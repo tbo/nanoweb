@@ -1,4 +1,4 @@
-import { render } from '../../src';
+import { render } from '@nanoweb/jsx';
 import Page from './page';
 
 const executeBenchmark = async () => render(await Page());

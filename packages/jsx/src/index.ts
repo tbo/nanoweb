@@ -2,11 +2,11 @@
 const rxUnescaped = new RegExp(/["'&<>]/);
 
 export const render = async (element: any): Promise<string> => {
-  const awaited = await element;
+  const awaited = element instanceof Promise ? await element : element;
   if (awaited instanceof Template) {
     return '<!DOCTYPE html>' + (await resolve(awaited));
   }
-  return String(element);
+  return element;
 };
 
 const resolve = async (elements: any): Promise<string> => {
@@ -86,8 +86,7 @@ const SELF_CLOSING = new Set([
 export const jsx = (type: any, props: Record<string, any>): Template => {
   if (typeof type === 'function') {
     return type(props);
-  }
-  if (typeof type === 'undefined') {
+  } else if (typeof type === 'undefined') {
     if (props.children) {
       return Template.from(props.children);
     } else {
@@ -111,11 +110,8 @@ export const jsx = (type: any, props: Record<string, any>): Template => {
     }
     return template;
   }
-  const children = !props.children
-    ? []
-    : Array.isArray(props?.children) && !(props.children instanceof Template)
-    ? props.children
-    : [props.children];
+  const children =
+    Array.isArray(props?.children) && !(props.children instanceof Template) ? props.children : [props.children];
   for (let i = 0; i < children.length; i++) {
     const child = children[i];
     if (!(child instanceof Template)) {
@@ -123,14 +119,6 @@ export const jsx = (type: any, props: Record<string, any>): Template => {
     }
   }
   const template = new Template();
-  if (!children.length) {
-    if (SELF_CLOSING.has(type)) {
-      template[0] = '<' + type + propString + '/>';
-    } else {
-      template[0] = '<' + type + propString + '></' + type + '>';
-    }
-    return template;
-  }
   const length = children.length;
   template[0] = '<' + type + propString + '>';
   for (let i = 0; i < length; i++) {
