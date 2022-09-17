@@ -1,6 +1,6 @@
 {
   "name": "@nanoweb/jsx",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -22,7 +22,7 @@
     "url": "https://github.com/tbo/nanoweb/issues"
   },
   "homepage": "https://nanoweb.js.org/",
-  "devDependencies": {
+  "dependencies": {
     "csstype": "3.1.1"
   }
 }
