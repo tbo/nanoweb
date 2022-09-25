@@ -1212,6 +1212,7 @@ declare global {
   interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T> {
     // Attributes which also defined in HTMLAttributes
     // See comment in SVGDOMPropertyConfig.js
+    class?: ClassType;
     color?: string | undefined;
     height?: number | string | undefined;
     id?: string | undefined;
