@@ -1695,7 +1695,7 @@ declare global {
 declare global {
   namespace JSX {
     type Children = NanowebNode;
-    type Element = Template | Promise<Template>;
+    type Element = Template | Promise<Template | undefined | null> | undefined | null;
 
     interface ElementAttributesProperty {
       props: {};
