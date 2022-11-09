@@ -4,9 +4,7 @@
     "sourceMap": true,
     "declaration": true,
     "esModuleInterop": true,
-    "strict": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "@nanoweb/jsx"
+    "strict": true
   },
   "references": [{ "path": "packages/template" }]
 }

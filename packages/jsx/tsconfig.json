@@ -6,8 +6,14 @@
     "types": ["node", "jest"],
     "lib": ["esnext"],
     "rootDir": "./src/",
-    "outDir": "."
+    "outDir": ".",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@nanoweb/jsx",
+    "paths": {
+      "@nanoweb/jsx": ["./src/jsx-runtime"],
+      "@nanoweb/jsx/jsx-runtime": ["./src/jsx-runtime"]
+    }
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*", "./tests/**/*"]
+  "include": ["./src/**/*"]
 }
