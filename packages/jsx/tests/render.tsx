@@ -1,4 +1,4 @@
-import { render } from '@nanoweb/jsx';
+import { render, unsafe } from '@nanoweb/jsx';
 
 const matchSnapshot = async (getComponent: () => JSX.Element) => expect(await render(getComponent())).toMatchSnapshot();
 
@@ -106,6 +106,20 @@ describe('Render to string', () => {
             <AsyncCustom>def</AsyncCustom>
           </p>
           {[<Custom>ghi</Custom>, <AsyncCustom>jkm</AsyncCustom>]}
+        </body>
+      </html>
+    ));
+  });
+
+  test('Unsafe', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head></head>
+        <body class="main">
+          <div>{unsafe('<script>alert("hacked")</script>')}</div>
+          <div>{Promise.resolve(unsafe('<script>alert("hacked")</script>'))}</div>
+          <div>{Promise.resolve(unsafe('<script>alert("hacked")</script>'))}</div>
+          {[unsafe('<script>alert("hacked")</script>'), Promise.resolve(unsafe('<script>alert("hacked")</script>'))]}
         </body>
       </html>
     ));

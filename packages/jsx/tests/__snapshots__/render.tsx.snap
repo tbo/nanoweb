@@ -14,4 +14,6 @@ exports[`Render to string Simple nesting 1`] = `"<!DOCTYPE html><html><head><tit
 
 exports[`Render to string Simple static component 1`] = `"<!DOCTYPE html><html><head></head><body>content</body></html>"`;
 
+exports[`Render to string Unsafe 1`] = `"<!DOCTYPE html><html><head></head><body class="main"><div><script>alert("hacked")</script></div><div><script>alert("hacked")</script></div><div><script>alert("hacked")</script></div><script>alert("hacked")</script><script>alert("hacked")</script></body></html>"`;
+
 exports[`Render to string async component 1`] = `"<!DOCTYPE html><html><head></head><body>content</body></html>"`;
