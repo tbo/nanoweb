@@ -23,7 +23,7 @@ const resolve = async (elements: any): Promise<string> => {
 
 function escape(text: any): string {
   /* Much faster when there is no unescaped characters */
-  if (typeof text !== 'string' || (text as any) instanceof Unsafe || !rxUnescaped.test(text)) {
+  if (typeof text !== 'string' || !rxUnescaped.test(text)) {
     return text;
   }
 
@@ -64,9 +64,7 @@ export class Template extends Array {}
 
 export type TemplateType = typeof Template;
 
-export class Unsafe extends String {}
-
-export const unsafe = (value = ''): string => new Unsafe([value]) as string;
+export const unsafe = (value = '') => Template.from([value]);
 
 const SELF_CLOSING = new Set([
   'area',
@@ -149,7 +147,7 @@ const toString = (key: string, value: any) => {
       .map(entry => [kebapCache[entry[0]] || (kebapCache[entry[0]] = toKebapCase(entry[0])), entry[1]].join(':'))
       .join(';')
       .toLowerCase();
-  } else if (typeof value === 'object' && !(value instanceof Unsafe)) {
+  } else if (typeof value === 'object') {
     value = JSON.stringify(value);
   } else if (typeof value === 'boolean') {
     return ` ${keyCache[key] || (keyCache[key] = escape(key.toLowerCase()))}`;

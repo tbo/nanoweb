@@ -64,11 +64,6 @@ declare global {
 
   interface DOMAttributes<T> {
     children?: NanowebNode | undefined;
-    dangerouslySetInnerHTML?:
-      | {
-          __html: string;
-        }
-      | undefined;
 
     // Clipboard Events
     onCopy?: string;
