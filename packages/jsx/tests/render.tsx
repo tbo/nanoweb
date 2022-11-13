@@ -136,6 +136,10 @@ describe('Render to string', () => {
           {undefined}
           <p>{null}test</p>
           {[undefined, null, 0]}
+          <Custom>{0}</Custom>
+          <Custom>{undefined}</Custom>
+          <Custom>{null}</Custom>
+          <Custom>{[undefined, null, 0]}</Custom>
         </body>
       </html>
     ));

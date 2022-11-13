@@ -101,7 +101,7 @@ export const jsx = (type: any, props: Record<string, any>): Template => {
       }
     }
   }
-  if (!props.children) {
+  if (props.children == null) {
     const template = new Template();
     if (SELF_CLOSING.has(type)) {
       template[0] = '<' + type + propString + '/>';
