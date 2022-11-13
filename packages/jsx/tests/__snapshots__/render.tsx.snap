@@ -8,6 +8,8 @@ exports[`Render to string Custom component 1`] = `"<!DOCTYPE html><html><head></
 
 exports[`Render to string Escape dangerous strings 1`] = `"<!DOCTYPE html><html><head></head><body>&lt;script&gt;alert(&quot;hacked&quot;)&lt;/script&gt;</body></html>"`;
 
+exports[`Render to string Falsy values 1`] = `"<!DOCTYPE html><html><head><title>a title</title></head><body>0<p>test</p>0</body></html>"`;
+
 exports[`Render to string Self closing tags 1`] = `"<!DOCTYPE html><html><head><meta name="test"/></head><body><br/><hr/><img/></body></html>"`;
 
 exports[`Render to string Simple nesting 1`] = `"<!DOCTYPE html><html><head><title>a title</title></head><body>123<p>test</p></body></html>"`;

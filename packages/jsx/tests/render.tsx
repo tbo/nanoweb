@@ -124,4 +124,20 @@ describe('Render to string', () => {
       </html>
     ));
   });
+
+  test('Falsy values', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head>
+          <title>{'a title'}</title>
+        </head>
+        <body>
+          {0}
+          {undefined}
+          <p>{null}test</p>
+          {[undefined, null, 0]}
+        </body>
+      </html>
+    ));
+  });
 });
