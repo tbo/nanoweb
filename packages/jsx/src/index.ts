@@ -129,6 +129,7 @@ export const jsx = (type: any, props: Record<string, any>): Template => {
 };
 
 export const jsxs = jsx;
+export const Fragment = (props: Record<string, any>) => jsx(undefined, props);
 
 const CAMEL_CASE_PATTERN = new RegExp('[a-z]+((d)|([A-Z0-9][a-z0-9]+))*([A-Z])?', 'g');
 
