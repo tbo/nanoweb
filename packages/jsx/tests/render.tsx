@@ -144,4 +144,8 @@ describe('Render to string', () => {
       </html>
     ));
   });
+
+  test('Render null alt attribute', async () => {
+    await matchSnapshot(() => <img src="./test.jpg" alt="" />);
+  });
 });
