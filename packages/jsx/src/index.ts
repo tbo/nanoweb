@@ -96,7 +96,7 @@ export const jsx = (type: any, props: Record<string, any>): Template => {
   let propString = '';
   if (props) {
     for (const i in props) {
-      if (props[i] != null) {
+      if (props[i] != null && props[i] !== false) {
         propString += toString(i, props[i]);
       }
     }

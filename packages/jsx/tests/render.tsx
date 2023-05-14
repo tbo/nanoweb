@@ -148,4 +148,10 @@ describe('Render to string', () => {
   test('Render null alt attribute', async () => {
     await matchSnapshot(() => <img src="./test.jpg" alt="" />);
   });
+
+  test('Render boolean attributes', async () => {
+    await matchSnapshot(() => <input type="checkbox" checked={false} />);
+    await matchSnapshot(() => <input type="checkbox" checked={true} />);
+    await matchSnapshot(() => <input type="checkbox" checked />);
+  });
 });
