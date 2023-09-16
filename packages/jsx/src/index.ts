@@ -4,21 +4,29 @@ const rxUnescaped = new RegExp(/["'&<>]/);
 export const render = async (element: any): Promise<string> => {
   const awaited = element instanceof Promise ? await element : element;
   if (awaited instanceof Template) {
-    return '<!DOCTYPE html>' + (await resolve(awaited));
+    const stack: any[] = [awaited];
+    const result = ['<!DOCTYPE html>'];
+
+    while (stack.length > 0) {
+      const elements = stack.pop();
+
+      if (elements instanceof Promise) {
+        stack.push(await elements);
+        continue;
+      }
+
+      if (Array.isArray(elements)) {
+        for (let i = elements.length - 1; i >= 0; i--) {
+          stack.push(elements[i]);
+        }
+      } else if (elements || elements === 0) {
+        result.push(elements);
+      }
+    }
+
+    return result.join('');
   }
   return element;
-};
-
-const resolve = async (elements: any): Promise<string> => {
-  let result = '';
-  if (Array.isArray(elements)) {
-    for (const child of elements) {
-      result += await resolve(child instanceof Promise ? await child : child);
-    }
-  } else if (elements || elements === 0) {
-    return elements;
-  }
-  return result;
 };
 
 function escape(text: any): string {
@@ -133,9 +141,9 @@ export const Fragment = (props: Record<string, any>) => jsx(undefined, props);
 
 const CAMEL_CASE_PATTERN = new RegExp('[a-z]+((d)|([A-Z0-9][a-z0-9]+))*([A-Z])?', 'g');
 
-const toKebapCase = (value: string) => value.match(CAMEL_CASE_PATTERN)!.join('-');
+const toKebabCase = (value: string) => value.match(CAMEL_CASE_PATTERN)!.join('-');
 
-const kebapCache: Record<string, string> = {};
+const kebabCache: Record<string, string> = {};
 const keyCache: Record<string, string> = {};
 
 const toString = (key: string, value: any) => {
@@ -145,7 +153,7 @@ const toString = (key: string, value: any) => {
     value = value.flat().filter(Boolean).join(' ');
   } else if (key === 'style') {
     value = Object.entries(value)
-      .map(entry => [kebapCache[entry[0]] || (kebapCache[entry[0]] = toKebapCase(entry[0])), entry[1]].join(':'))
+      .map(entry => [kebabCache[entry[0]] || (kebabCache[entry[0]] = toKebabCase(entry[0])), entry[1]].join(':'))
       .join(';')
       .toLowerCase();
   } else if (typeof value === 'object') {
