@@ -1,6 +1,6 @@
 {
   "name": "@nanoweb/links",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs.",
   "main": "dist/links.js",
   "source": "src/links.ts",
