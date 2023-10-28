@@ -16,7 +16,13 @@ exports[`Render to string Render boolean attributes 2`] = `"<!DOCTYPE html><inpu
 
 exports[`Render to string Render boolean attributes 3`] = `"<!DOCTYPE html><input type="checkbox" checked/>"`;
 
+exports[`Render to string Render className attribute as class 1`] = `"<!DOCTYPE html><html><head></head><body class="awesome">content</body></html>"`;
+
 exports[`Render to string Render null alt attribute 1`] = `"<!DOCTYPE html><img src="./test.jpg" alt=""/>"`;
+
+exports[`Render to string Render object styles 1`] = `"<!DOCTYPE html><html><head></head><body style="text-align:center;border:1px;z-index:2">content</body></html>"`;
+
+exports[`Render to string Render string styles 1`] = `"<!DOCTYPE html><html><head></head><body style="text-align: center; border: 1px">content</body></html>"`;
 
 exports[`Render to string Self closing tags 1`] = `"<!DOCTYPE html><html><head><meta name="test"/></head><body><br/><hr/><img src=""/></body></html>"`;
 
