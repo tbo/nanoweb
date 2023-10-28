@@ -177,7 +177,7 @@ describe('Render to string', () => {
     await matchSnapshot(() => (
       <html>
         <head></head>
-        <body style={{ textAlign: 'center', border: 1 }}>content</body>
+        <body style={{ textAlign: 'center', border: '1px', zIndex: 2 }}>content</body>
       </html>
     ));
   });
