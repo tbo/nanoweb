@@ -139,19 +139,29 @@ export const jsx = (type: any, props: Record<string, any>): Template => {
 export const jsxs = jsx;
 export const Fragment = (props: Record<string, any>) => jsx(undefined, props);
 
-const CAMEL_CASE_PATTERN = new RegExp('[a-z]+((d)|([A-Z0-9][a-z0-9]+))*([A-Z])?', 'g');
-
-const toKebabCase = (value: string) => value.match(CAMEL_CASE_PATTERN)!.join('-');
+const toKebabCase: (value: string) => string = value => {
+  let result = '';
+  for (let i = 0; i < value.length; i++) {
+    const char = value[i];
+    if (char >= 'A' && char <= 'Z') {
+      if (i !== 0) result += '-';
+      result += char.toLowerCase();
+    } else {
+      result += char;
+    }
+  }
+  return result;
+};
 
 const kebabCache: Record<string, string> = {};
-const keyCache: Record<string, string> = {};
+const keyCache: Record<string, string> = { className: 'class' };
 
 const toString = (key: string, value: any) => {
   if (value == null || key === 'children') {
     return '';
-  } else if (key === 'class' && Array.isArray(value)) {
+  } else if ((key === 'class' || key === 'className') && Array.isArray(value)) {
     value = value.flat().filter(Boolean).join(' ');
-  } else if (key === 'style') {
+  } else if (key === 'style' && typeof value === 'object') {
     value = Object.entries(value)
       .map(entry => [kebabCache[entry[0]] || (kebabCache[entry[0]] = toKebabCase(entry[0])), entry[1]].join(':'))
       .join(';')

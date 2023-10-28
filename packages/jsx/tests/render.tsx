@@ -154,4 +154,31 @@ describe('Render to string', () => {
     await matchSnapshot(() => <input type="checkbox" checked={true} />);
     await matchSnapshot(() => <input type="checkbox" checked />);
   });
+
+  test('Render className attribute as class', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head></head>
+        <body className="awesome">content</body>
+      </html>
+    ));
+  });
+
+  test('Render string styles', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head></head>
+        <body style="text-align: center; border: 1px">content</body>
+      </html>
+    ));
+  });
+
+  test('Render object styles', async () => {
+    await matchSnapshot(() => (
+      <html>
+        <head></head>
+        <body style={{ textAlign: 'center', border: 1 }}>content</body>
+      </html>
+    ));
+  });
 });

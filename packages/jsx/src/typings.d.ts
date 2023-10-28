@@ -552,6 +552,7 @@ declare global {
     // Standard HTML Attributes
     accessKey?: string | undefined;
     class?: ClassType;
+    className?: ClassType;
     contentEditable?: Booleanish | 'inherit' | undefined;
     contextMenu?: string | undefined;
     dir?: string | undefined;
@@ -562,7 +563,7 @@ declare global {
     placeholder?: string | undefined;
     slot?: string | undefined;
     spellCheck?: Booleanish | undefined;
-    style?: CSSProperties | undefined;
+    style?: CSSProperties | string | undefined;
     tabIndex?: number | undefined;
     title?: string | undefined;
     translate?: 'yes' | 'no' | undefined;
