@@ -86,6 +86,7 @@ const removeUnusedHeaderElements = (from: HTMLHeadElement, to: HTMLHeadElement) 
       element =>
         IMMUTABLE_TAGS.includes(element.nodeName) &&
         element !== loadingAnimation &&
+        element.getAttribute('data-vite-dev-id') === null &&
         !Array.from(to.children).find(toElement => toElement.isEqualNode(element)),
     )
     .forEach(element => from.removeChild(element));
