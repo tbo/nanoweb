@@ -2,26 +2,43 @@
   "name": "@nanoweb/jsx",
   "version": "0.0.19",
   "description": "nanoweb is a minimal library for building server-centric multi page web applications that behave like SPAs.",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "author": "Thomas Bonk",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tbo/nanoweb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tbo/nanoweb/issues"
+  },
+  "homepage": "https://nanoweb.js.org/",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./jsx-runtime": {
+      "import": "./dist/esm/jsx-runtime.js",
+      "require": "./dist/cjs/jsx-runtime.js",
+      "types": "./dist/types/jsx-runtime.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "test": "../../node_modules/.bin/jest",
-    "build": "npm run clean && ../../node_modules/.bin/tsc --build --force",
+    "build": "npm run clean && ../../node_modules/.bin/tsc && ../../node_modules/.bin/tsc -p tsconfig.cjs.json",
     "clean": "git clean -Xdf"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tbo/nanoweb.git"
-  },
-  "author": "Thomas Bonk",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/tbo/nanoweb/issues"
-  },
-  "homepage": "https://nanoweb.js.org/",
   "dependencies": {
     "csstype": "3.1.1"
   }
