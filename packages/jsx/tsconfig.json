@@ -1,12 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "esnext",
     "target": "esnext",
     "types": ["node", "jest"],
     "lib": ["esnext"],
     "rootDir": "./src/",
-    "outDir": ".",
+    "outDir": "./dist/esm/",
     "jsx": "react-jsx",
     "jsxImportSource": "@nanoweb/jsx",
     "paths": {
