@@ -29,8 +29,7 @@
     }
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "directories": {
     "test": "tests"

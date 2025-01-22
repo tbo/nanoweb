@@ -1,4 +1,5 @@
-///<reference path="./typings.d.ts" />
+export * from './typings.js';
+
 const rxUnescaped = new RegExp(/["'&<>]/);
 
 export const render = async (element: any): Promise<string> => {
