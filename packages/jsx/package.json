@@ -14,22 +14,23 @@
   "homepage": "https://nanoweb.js.org/",
   "type": "module",
   "main": "./dist/cjs/index.js",
-  "types": "./dist/esm/index.d.ts",
   "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js",
-      "types": "./dist/esm/index.d.ts"
+      "types": "./dist/types/index.d.ts"
     },
     "./jsx-runtime": {
       "import": "./dist/esm/jsx-runtime.js",
       "require": "./dist/cjs/jsx-runtime.js",
-      "types": "./dist/esm/jsx-runtime.d.ts"
+      "types": "./dist/types/jsx-runtime.d.ts"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "directories": {
     "test": "tests"
