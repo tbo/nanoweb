@@ -6,7 +6,8 @@
     "types": ["node", "jest"],
     "lib": ["esnext"],
     "rootDir": "./src/",
-    "outDir": "./dist/esm/",
+    "outDir": "./dist/esm",
+    "declarationDir": "./dist/types",
     "jsx": "react-jsx",
     "jsxImportSource": "@nanoweb/jsx",
     "paths": {
